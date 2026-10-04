@@ -1,0 +1,194 @@
+{
+  "outcome": 2,
+  "decision": "partial improvement; camera solver not justified yet",
+  "startingHead": "18aae76187593236f589b5cacda7a7d1439c26c4",
+  "baselineReceiptSha256": "b761cf159054938bdfd21efac6a6a174eef06fd9cc7dcb7a218c7d0dfd4fcedf",
+  "modes": [
+    "none",
+    "intrinsics-only",
+    "pose"
+  ],
+  "lanes": {
+    "A": {
+      "key": "dec33e79cee34d31a8667fe9ac44142db9f8318ae50b245b7000721d2e0c5ffd",
+      "depth": {
+        "INFERENCE": {
+          "samples": 197568,
+          "abs_rel": 0.672110292765349,
+          "scale_invariant_log_rmse": 0.07156086894236789,
+          "gauge_dependent_numeric_rmse_vs_metre_truth": 1.9230432191674243,
+          "interpretation": "unscaled relative units; AbsRel/RMSE versus metre truth are gauge-dependent diagnostic numbers, not physical metre accuracy"
+        },
+        "ALIGNED": {
+          "samples": 197568,
+          "abs_rel": 0.5529440006049604,
+          "rmse_m": 1.4717626797742875,
+          "scale_invariant_log_rmse": 0.07156086894236731
+        }
+      },
+      "scale_sources": {
+        "INFERENCE": "nowhere",
+        "ALIGNED": "existing 1.20m post-inference benchmark anchor"
+      },
+      "cross_view": {
+        "ALIGNED": {
+          "truth_visible_correspondences": 132078,
+          "valid_prediction_correspondences": 132078,
+          "prediction_coverage": 1,
+          "nonprojectable_prediction_correspondences": 0,
+          "reprojection_rmse_pixels": 24.882965162312676,
+          "duplicate_surface_scatter_rmse_cm": 20.494512104500796
+        }
+      }
+    },
+    "B": {
+      "key": "848c1cfab7b8fcbb6e112949a5f10dead599b35ea5d4e67d6e9d64ce5a12827c",
+      "depth": {
+        "INFERENCE": {
+          "samples": 197568,
+          "abs_rel": 0.672110292765349,
+          "scale_invariant_log_rmse": 0.07156086894236789,
+          "gauge_dependent_numeric_rmse_vs_metre_truth": 1.9230432191674243,
+          "interpretation": "unscaled relative units; AbsRel/RMSE versus metre truth are gauge-dependent diagnostic numbers, not physical metre accuracy"
+        },
+        "ALIGNED": {
+          "samples": 197568,
+          "abs_rel": 0.5529440006049604,
+          "rmse_m": 1.4717626797742875,
+          "scale_invariant_log_rmse": 0.07156086894236731
+        }
+      },
+      "scale_sources": {
+        "INFERENCE": "nowhere",
+        "ALIGNED": "existing 1.20m post-inference benchmark anchor"
+      },
+      "cross_view": {
+        "ALIGNED": {
+          "truth_visible_correspondences": 132078,
+          "valid_prediction_correspondences": 132078,
+          "prediction_coverage": 1,
+          "nonprojectable_prediction_correspondences": 0,
+          "reprojection_rmse_pixels": 24.882965162312676,
+          "duplicate_surface_scatter_rmse_cm": 20.494512104500796
+        }
+      }
+    },
+    "C": {
+      "key": "adde22f3f2f5bc48731a14d634d1fa7139289686bad60e24e8846fafbe6f4317",
+      "depth": {
+        "INFERENCE": {
+          "samples": 197568,
+          "abs_rel": 0.051330942885300226,
+          "scale_invariant_log_rmse": 0.07022579950672801,
+          "interpretation": "provider-native metric conditioned inference; use NATIVE for metre accuracy",
+          "rmse_m": 0.18072876061237414
+        },
+        "ALIGNED": {
+          "samples": 197568,
+          "abs_rel": 0.1686214038354077,
+          "rmse_m": 0.4349294444369984,
+          "scale_invariant_log_rmse": 0.07022579950672796
+        },
+        "NATIVE": {
+          "samples": 197568,
+          "abs_rel": 0.051330942885300226,
+          "rmse_m": 0.18072876061237414,
+          "scale_invariant_log_rmse": 0.07022579950672801
+        }
+      },
+      "scale_sources": {
+        "INFERENCE": "DA3 supplied-camera path",
+        "ALIGNED": "both DA3 supplied-camera path and existing 1.20m benchmark anchor",
+        "NATIVE": "DA3 supplied-camera path; no benchmark anchor or rigid fit"
+      },
+      "cross_view": {
+        "ALIGNED": {
+          "truth_visible_correspondences": 132078,
+          "valid_prediction_correspondences": 132078,
+          "prediction_coverage": 1,
+          "nonprojectable_prediction_correspondences": 0,
+          "reprojection_rmse_pixels": 10.069071876262669,
+          "duplicate_surface_scatter_rmse_cm": 22.877953108520373
+        },
+        "NATIVE": {
+          "truth_visible_correspondences": 132078,
+          "valid_prediction_correspondences": 132078,
+          "prediction_coverage": 1,
+          "nonprojectable_prediction_correspondences": 0,
+          "reprojection_rmse_pixels": 5.657772176161676,
+          "duplicate_surface_scatter_rmse_cm": 19.60465195127568
+        }
+      }
+    },
+    "D": {
+      "key": "3f4d9deffbec171d837f4b4d4403193f5ef429387f9055d3722b7105049bc797",
+      "depth": {
+        "INFERENCE": {
+          "samples": 197568,
+          "abs_rel": 0.05663953683999759,
+          "scale_invariant_log_rmse": 0.07234158763561244,
+          "interpretation": "provider-native metric conditioned inference; use NATIVE for metre accuracy",
+          "rmse_m": 0.20847867829196376
+        },
+        "ALIGNED": {
+          "samples": 197568,
+          "abs_rel": 0.2199598839390918,
+          "rmse_m": 0.570967116982645,
+          "scale_invariant_log_rmse": 0.07234158763561241
+        },
+        "NATIVE": {
+          "samples": 197568,
+          "abs_rel": 0.05663953683999759,
+          "rmse_m": 0.20847867829196376,
+          "scale_invariant_log_rmse": 0.07234158763561244
+        }
+      },
+      "scale_sources": {
+        "INFERENCE": "DA3 supplied-camera path",
+        "ALIGNED": "both DA3 supplied-camera path and existing 1.20m benchmark anchor",
+        "NATIVE": "DA3 supplied-camera path; no benchmark anchor or rigid fit"
+      },
+      "cross_view": {
+        "ALIGNED": {
+          "truth_visible_correspondences": 132078,
+          "valid_prediction_correspondences": 132078,
+          "prediction_coverage": 1,
+          "nonprojectable_prediction_correspondences": 0,
+          "reprojection_rmse_pixels": 10.347122933971166,
+          "duplicate_surface_scatter_rmse_cm": 26.218533049930315
+        },
+        "NATIVE": {
+          "truth_visible_correspondences": 132078,
+          "valid_prediction_correspondences": 132078,
+          "prediction_coverage": 1,
+          "nonprojectable_prediction_correspondences": 0,
+          "reprojection_rmse_pixels": 9.123603404619429,
+          "duplicate_surface_scatter_rmse_cm": 21.107445913779713
+        }
+      }
+    }
+  },
+  "verification": {
+    "node": 61,
+    "viewer": 13,
+    "worker": 25,
+    "geometry": 11,
+    "jsSyntaxModules": 43,
+    "typecheck": "passed",
+    "productionBuild": "passed",
+    "modelInference": [
+      "B",
+      "C",
+      "D"
+    ],
+    "laneAInferenceRerun": false,
+    "fixtureImageHashesUnchanged": true
+  },
+  "nextMilestone": "one alternate commercially acceptable lightweight observed-geometry provider on exact same fixture, before camera solving",
+  "fullMetricsReceipts": [
+    "lane-A-supplemental-v2.json",
+    "lane-B-result-v2.json",
+    "lane-C-result-v2.json",
+    "lane-D-result-v2.json"
+  ]
+}

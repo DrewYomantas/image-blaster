@@ -1,0 +1,43 @@
+{
+  "kind": "negative control exact tensor comparison, no Lane A inference rerun",
+  "lane_a_prediction_sha256": "22e5ea9dccdc8890c94dce85e9172045bd11e1cce7f9cf7fa0b5b74c98e4526d",
+  "lane_b_prediction_sha256": "66e44daaf472554034e96f96ae3808be11dfbc4f17a2f482f6f890456f9eca0f",
+  "arrays": {
+    "depths": {
+      "exact_array_equality": true,
+      "max_absolute_difference": 0.0,
+      "shape": [
+        4,
+        196,
+        252
+      ]
+    },
+    "confidences": {
+      "exact_array_equality": true,
+      "max_absolute_difference": 0.0,
+      "shape": [
+        4,
+        196,
+        252
+      ]
+    },
+    "intrinsics": {
+      "exact_array_equality": true,
+      "max_absolute_difference": 0.0,
+      "shape": [
+        4,
+        3,
+        3
+      ]
+    },
+    "extrinsics": {
+      "exact_array_equality": true,
+      "max_absolute_difference": 0.0,
+      "shape": [
+        4,
+        3,
+        4
+      ]
+    }
+  }
+}

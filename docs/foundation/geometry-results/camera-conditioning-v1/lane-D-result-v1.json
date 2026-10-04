@@ -1,0 +1,3374 @@
+{
+  "lane": "D",
+  "kind": "experiment-only oracle camera control; visual-only model depth",
+  "conditioningFile": {
+    "file": "lane-D-conditioning.json",
+    "sha256": "7a938dd66d2c8a411390fc6f4a3c893969664b583d70435940c0a2ac85fdb710"
+  },
+  "requestFile": "C:\\Projects\\image-blaster\\.image-blaster\\benchmark\\camera-conditioning-v1\\lane-D-request.json",
+  "key": "3f4d9deffbec171d837f4b4d4403193f5ef429387f9055d3722b7105049bc797",
+  "manifestPath": "C:\\Projects\\image-blaster\\.image-blaster\\cache\\3f4d9deffbec171d837f4b4d4403193f5ef429387f9055d3722b7105049bc797\\manifest.json",
+  "firstCached": false,
+  "repeatCached": true,
+  "firstWallSeconds": 9.247529900000002,
+  "repeatWallSeconds": 0.6834400000000024,
+  "additionalInferenceOnRepeat": 0,
+  "worker": {
+    "protocolVersion": 1,
+    "status": "complete",
+    "identity": {
+      "protocolVersion": 1,
+      "providerId": "local-da3-small",
+      "model": "depth-anything/DA3-SMALL",
+      "modelRevision": "e08cab65ca0ec38e7826075418411ab90cab4da3",
+      "checkpointSha256": "364492e38a3a06d221ac75da7f6621ada3f2361cd24fde11ba79091e9f40efcf",
+      "configSha256": "a486e29e82b7ab4a7d4cefc1ea4526cfe2ae438a572c8ca98917cfbcde7447d2",
+      "upstreamRevision": "3d835ec1a5802d64a8b8b15f817a1ab54809bfe4",
+      "upstreamSourceSha256": "6aaf76ff126a6643112df69bb1762607415a0ef0bf44ac1a15096ec9e25be3ae",
+      "adapterVersion": "da3-small-cpu-4",
+      "adapterFiles": [
+        {
+          "path": "worker.py",
+          "sha256": "eeb037cdde6c6c3ca6f27d02e5fe41bbb42b35ff0555683a813fecdebb95aaf4"
+        },
+        {
+          "path": "requirements.txt",
+          "sha256": "e07ba0c2456a52e379eb1dbe65b9501effee82ffdf143da14207a769be3d3b57"
+        }
+      ],
+      "pythonVersion": "3.12.12",
+      "runtimeDependencies": {
+        "torch": "2.7.1+cpu",
+        "torchvision": "0.22.1+cpu",
+        "numpy": "1.26.4",
+        "opencv-python": "4.11.0.86",
+        "pillow": "11.2.1",
+        "omegaconf": "2.3.0",
+        "addict": "2.4.0",
+        "einops": "0.8.1",
+        "safetensors": "0.5.3",
+        "imageio": "2.37.0",
+        "tqdm": "4.67.1",
+        "evo": "1.33.0"
+      },
+      "installedPackages": {
+        "Jinja2": "3.1.6",
+        "MarkupSafe": "3.0.3",
+        "PyYAML": "6.0.3",
+        "Pygments": "2.21.0",
+        "addict": "2.4.0",
+        "antlr4-python3-runtime": "4.9.3",
+        "apsw": "3.53.4.0",
+        "argcomplete": "3.7.2",
+        "colorama": "0.4.6",
+        "contourpy": "1.3.3",
+        "cycler": "0.12.1",
+        "einops": "0.8.1",
+        "evo": "1.33.0",
+        "filelock": "3.32.3",
+        "fonttools": "4.66.1",
+        "fsspec": "2026.7.0",
+        "imageio": "2.37.0",
+        "kiwisolver": "1.5.1",
+        "lz4": "4.4.5",
+        "matplotlib": "3.11.2",
+        "mpmath": "1.3.0",
+        "natsort": "8.4.0",
+        "networkx": "3.6.1",
+        "numexpr": "2.14.2",
+        "numpy": "1.26.4",
+        "omegaconf": "2.3.0",
+        "opencv-python": "4.11.0.86",
+        "packaging": "26.3",
+        "pandas": "3.0.6",
+        "pillow": "11.2.1",
+        "pyparsing": "3.3.3",
+        "python-dateutil": "2.9.0.post0",
+        "rosbags": "0.11.5",
+        "ruamel.yaml": "0.19.1",
+        "safetensors": "0.5.3",
+        "scipy": "1.17.1",
+        "seaborn": "0.13.2",
+        "setuptools": "78.1.0",
+        "six": "1.17.0",
+        "sympy": "1.14.0",
+        "torch": "2.7.1+cpu",
+        "torchvision": "0.22.1+cpu",
+        "tqdm": "4.67.1",
+        "typing_extensions": "4.16.0",
+        "tzdata": "2026.5",
+        "zstandard": "0.25.0"
+      },
+      "device": "cpu",
+      "dtype": "float32",
+      "license": {
+        "code": "Apache-2.0",
+        "weights": "Apache-2.0",
+        "commercialUse": "permitted"
+      }
+    },
+    "parameters": {
+      "processResolution": 256,
+      "processResolutionMethod": "upper_bound_resize",
+      "referenceViewStrategy": "saddle_balanced",
+      "useRayPose": false,
+      "threads": 6,
+      "profileWarmInference": true
+    },
+    "coordinates": {
+      "cameraConvention": "opencv",
+      "extrinsics": "world-to-camera",
+      "axes": "x-right,y-down,z-forward",
+      "depth": "camera-z",
+      "units": "meters",
+      "confidence": "raw-uncalibrated-higher-is-better",
+      "worldFrame": "scene-y-up",
+      "scaleSource": "supplied-camera-path"
+    },
+    "conditioning": {
+      "mode": "pose",
+      "provenance": "experiment-oracle",
+      "cameraConvention": "opencv-world-to-camera-scene-y-up-meters",
+      "workerRequestCameraSha256": "116136cbb754b8a1d53c5170900c7ccbcdfe589632e2d789cbb11785e0704441",
+      "cameraHashEncoding": "python-sorted-compact-json-not-conditioning-file-bytes",
+      "sourceIntrinsics": [
+        [
+          [
+            367.5,
+            0,
+            319.5
+          ],
+          [
+            0,
+            367.5,
+            239.5
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            367.5,
+            0,
+            319.5
+          ],
+          [
+            0,
+            367.5,
+            239.5
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            367.5,
+            0,
+            319.5
+          ],
+          [
+            0,
+            367.5,
+            239.5
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            367.5,
+            0,
+            319.5
+          ],
+          [
+            0,
+            367.5,
+            239.5
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ]
+      ],
+      "processedIntrinsics": [
+        [
+          [
+            144.703125,
+            0,
+            125.80313110351562
+          ],
+          [
+            0,
+            150.0625,
+            97.79583740234375
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            144.703125,
+            0,
+            125.80313110351562
+          ],
+          [
+            0,
+            150.0625,
+            97.79583740234375
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            144.703125,
+            0,
+            125.80313110351562
+          ],
+          [
+            0,
+            150.0625,
+            97.79583740234375
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            144.703125,
+            0,
+            125.80313110351562
+          ],
+          [
+            0,
+            150.0625,
+            97.79583740234375
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ]
+      ],
+      "sourceExtrinsics": [
+        [
+          [
+            0.8631876111030579,
+            0,
+            0.5048832893371582,
+            -0.20260478556156158
+          ],
+          [
+            -0.09061215072870255,
+            -0.9837631583213806,
+            0.15491755306720734,
+            1.0108884572982788
+          ],
+          [
+            0.49668562412261963,
+            -0.1794714629650116,
+            -0.8491721749305725,
+            3.5968117713928223
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            0.9731777906417847,
+            0.0037121055647730827,
+            0.2300243079662323,
+            -0.15118370950222015
+          ],
+          [
+            -0.020860008895397186,
+            -0.9943270683288574,
+            0.10430004447698593,
+            1.1030077934265137
+          ],
+          [
+            0.22910656034946442,
+            -0.10630079358816147,
+            -0.9675796031951904,
+            3.317833185195923
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            0.9691206812858582,
+            0.03432789817452431,
+            -0.24418580532073975,
+            0.03725035488605499
+          ],
+          [
+            0.07680709660053253,
+            -0.9830223917961121,
+            0.16663643717765808,
+            1.0493277311325073
+          ],
+          [
+            -0.23431983590126038,
+            -0.1802460253238678,
+            -0.9553039073944092,
+            3.272006034851074
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            0.8269616961479187,
+            -0.0026883690152317286,
+            -0.5622518658638,
+            0.308228075504303
+          ],
+          [
+            0.05190151184797287,
+            -0.9953540563583374,
+            0.0810961127281189,
+            1.2202359437942505
+          ],
+          [
+            -0.5598576664924622,
+            -0.09624509513378143,
+            -0.8229801058769226,
+            3.372687339782715
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ]
+      ],
+      "normalizedExtrinsics": [
+        [
+          [
+            1,
+            0,
+            2.9802322387695312e-8,
+            -1.399796900614092e-7
+          ],
+          [
+            0,
+            0.9999999403953552,
+            -1.4901161193847656e-8,
+            1.2442639274468092e-7
+          ],
+          [
+            2.9802322387695312e-8,
+            -1.4901161193847656e-8,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            0.9561704397201538,
+            -0.056198764592409134,
+            0.28736692667007446,
+            -0.9751399159431458
+          ],
+          [
+            0.03465325012803078,
+            0.99623042345047,
+            0.07952376455068588,
+            -0.19109366834163666
+          ],
+          [
+            -0.2907528281211853,
+            -0.06608008593320847,
+            0.9545135498046875,
+            -0.1121845692396164
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            0.7132475972175598,
+            -0.15941329300403595,
+            0.6825432181358337,
+            -2.2045059204101562
+          ],
+          [
+            0.15043088793754578,
+            0.9859164357185364,
+            0.07307043671607971,
+            -0.18752935528755188
+          ],
+          [
+            -0.6845789551734924,
+            0.05055828392505646,
+            0.7271832227706909,
+            0.48708003759384155
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            0.4299515187740326,
+            -0.15939074754714966,
+            0.8886711597442627,
+            -2.7554519176483154
+          ],
+          [
+            0.08574481308460236,
+            0.9870529770851135,
+            0.1355518400669098,
+            -0.2585889995098114
+          ],
+          [
+            -0.8987711071968079,
+            0.01791822910308838,
+            0.43805181980133057,
+            1.6667755842208862
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ]
+      ],
+      "normalizationMedianDistanceMeters": 0.9580708146095276,
+      "backbonePoseConditioning": true,
+      "referenceViewBehavior": "source-0-no-reorder",
+      "cameraPredictionIndependent": false,
+      "outputCameraSource": "experiment-oracle-supplied",
+      "depthScaleSource": "supplied-camera-path",
+      "poseAlignmentScale": 0.3286723178558321,
+      "depthScaleMultiplier": 3.0425440345074546,
+      "intrinsicsResizeConvention": "upstream-row-scaling-no-half-pixel-offset",
+      "depthSemantics": "model-inference-conditioned-on-experiment-oracle-cameras"
+    },
+    "rawCameraPredictions": {
+      "independent": false,
+      "intrinsics": [
+        [
+          [
+            160.5888671875,
+            0,
+            126
+          ],
+          [
+            0,
+            165.87539672851562,
+            98
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            160.5788116455078,
+            0,
+            126
+          ],
+          [
+            0,
+            169.61598205566406,
+            98
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            162.0078125,
+            0,
+            126
+          ],
+          [
+            0,
+            171.49777221679688,
+            98
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            165.58946228027344,
+            0,
+            126
+          ],
+          [
+            0,
+            171.39764404296875,
+            98
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ]
+      ],
+      "extrinsics": [
+        [
+          [
+            0.9999936819076538,
+            -0.0025036477018147707,
+            0.0025200219824910164,
+            -0.002222163137048483
+          ],
+          [
+            0.0025065517984330654,
+            0.9999961853027344,
+            -0.0011498962994664907,
+            0.0013091865694150329
+          ],
+          [
+            -0.0025171334855258465,
+            0.0011562056606635451,
+            0.9999961853027344,
+            -0.0004299167776480317
+          ]
+        ],
+        [
+          [
+            0.956483781337738,
+            -0.045349303632974625,
+            0.28823983669281006,
+            -0.29156404733657837
+          ],
+          [
+            0.026577062904834747,
+            0.9972824454307556,
+            0.06871200352907181,
+            -0.055633675307035446
+          ],
+          [
+            -0.29057255387306213,
+            -0.058061350136995316,
+            0.9550897479057312,
+            -0.03963169455528259
+          ]
+        ],
+        [
+          [
+            0.7068926095962524,
+            -0.1344745010137558,
+            0.6944202184677124,
+            -0.6767702698707581
+          ],
+          [
+            0.13725174963474274,
+            0.9891788363456726,
+            0.05183761566877365,
+            -0.04763413220643997
+          ],
+          [
+            -0.6938766837120056,
+            0.05866677686572075,
+            0.7177000641822815,
+            0.16500234603881836
+          ]
+        ],
+        [
+          [
+            0.39979296922683716,
+            -0.14657345414161682,
+            0.9048103094100952,
+            -0.857878565788269
+          ],
+          [
+            0.10487161576747894,
+            0.9879640340805054,
+            0.11370599269866943,
+            -0.09173159301280975
+          ],
+          [
+            -0.9105862975120544,
+            0.049430083483457565,
+            0.4103524088859558,
+            0.5448821187019348
+          ]
+        ]
+      ]
+    },
+    "inputs": [
+      {
+        "sourceIndex": 0,
+        "sha256": "a2a6946feb12b3daed1c4b2051f6d402270463dee76c6f0e505116c8408ca8a7"
+      },
+      {
+        "sourceIndex": 1,
+        "sha256": "0a322ec9f025870bbc4bdc9062fb48dd38a33437a0ba135570a5d23f80b06848"
+      },
+      {
+        "sourceIndex": 2,
+        "sha256": "daa36b9ab1f6ec90107cf922c916c55bbc9bfc189b1333d5399f7c2ca78c75ae"
+      },
+      {
+        "sourceIndex": 3,
+        "sha256": "251de8b6da00c3fd4d4d4748912719b2eb14c22affc621f24db41c8b50bcaae7"
+      }
+    ],
+    "cameras": [
+      {
+        "sourceIndex": 0,
+        "intrinsics": [
+          [
+            144.703125,
+            0,
+            125.80313110351562
+          ],
+          [
+            0,
+            150.0625,
+            97.79583740234375
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "extrinsics": [
+          [
+            0.8631876111030579,
+            0,
+            0.5048832893371582,
+            -0.20260478556156158
+          ],
+          [
+            -0.09061215072870255,
+            -0.9837631583213806,
+            0.15491755306720734,
+            1.0108884572982788
+          ],
+          [
+            0.49668562412261963,
+            -0.1794714629650116,
+            -0.8491721749305725,
+            3.5968117713928223
+          ]
+        ],
+        "imageWidth": 252,
+        "imageHeight": 196,
+        "inputWidth": 640,
+        "inputHeight": 480,
+        "pixelTransform": {
+          "scaleX": 0.39375,
+          "scaleY": 0.4083333333333333,
+          "offsetX": -0.303125,
+          "offsetY": -0.29583333333333334,
+          "pixelCenters": "opencv-half-pixel-resize",
+          "cropLeft": 0,
+          "cropTop": 0
+        }
+      },
+      {
+        "sourceIndex": 1,
+        "intrinsics": [
+          [
+            144.703125,
+            0,
+            125.80313110351562
+          ],
+          [
+            0,
+            150.0625,
+            97.79583740234375
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "extrinsics": [
+          [
+            0.9731777906417847,
+            0.0037121055647730827,
+            0.2300243079662323,
+            -0.15118370950222015
+          ],
+          [
+            -0.020860008895397186,
+            -0.9943270683288574,
+            0.10430004447698593,
+            1.1030077934265137
+          ],
+          [
+            0.22910656034946442,
+            -0.10630079358816147,
+            -0.9675796031951904,
+            3.317833185195923
+          ]
+        ],
+        "imageWidth": 252,
+        "imageHeight": 196,
+        "inputWidth": 640,
+        "inputHeight": 480,
+        "pixelTransform": {
+          "scaleX": 0.39375,
+          "scaleY": 0.4083333333333333,
+          "offsetX": -0.303125,
+          "offsetY": -0.29583333333333334,
+          "pixelCenters": "opencv-half-pixel-resize",
+          "cropLeft": 0,
+          "cropTop": 0
+        }
+      },
+      {
+        "sourceIndex": 2,
+        "intrinsics": [
+          [
+            144.703125,
+            0,
+            125.80313110351562
+          ],
+          [
+            0,
+            150.0625,
+            97.79583740234375
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "extrinsics": [
+          [
+            0.9691206812858582,
+            0.03432789817452431,
+            -0.24418580532073975,
+            0.03725035488605499
+          ],
+          [
+            0.07680709660053253,
+            -0.9830223917961121,
+            0.16663643717765808,
+            1.0493277311325073
+          ],
+          [
+            -0.23431983590126038,
+            -0.1802460253238678,
+            -0.9553039073944092,
+            3.272006034851074
+          ]
+        ],
+        "imageWidth": 252,
+        "imageHeight": 196,
+        "inputWidth": 640,
+        "inputHeight": 480,
+        "pixelTransform": {
+          "scaleX": 0.39375,
+          "scaleY": 0.4083333333333333,
+          "offsetX": -0.303125,
+          "offsetY": -0.29583333333333334,
+          "pixelCenters": "opencv-half-pixel-resize",
+          "cropLeft": 0,
+          "cropTop": 0
+        }
+      },
+      {
+        "sourceIndex": 3,
+        "intrinsics": [
+          [
+            144.703125,
+            0,
+            125.80313110351562
+          ],
+          [
+            0,
+            150.0625,
+            97.79583740234375
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "extrinsics": [
+          [
+            0.8269616961479187,
+            -0.0026883690152317286,
+            -0.5622518658638,
+            0.308228075504303
+          ],
+          [
+            0.05190151184797287,
+            -0.9953540563583374,
+            0.0810961127281189,
+            1.2202359437942505
+          ],
+          [
+            -0.5598576664924622,
+            -0.09624509513378143,
+            -0.8229801058769226,
+            3.372687339782715
+          ]
+        ],
+        "imageWidth": 252,
+        "imageHeight": 196,
+        "inputWidth": 640,
+        "inputHeight": 480,
+        "pixelTransform": {
+          "scaleX": 0.39375,
+          "scaleY": 0.4083333333333333,
+          "offsetX": -0.303125,
+          "offsetY": -0.29583333333333334,
+          "pixelCenters": "opencv-half-pixel-resize",
+          "cropLeft": 0,
+          "cropTop": 0
+        }
+      }
+    ],
+    "geometryArtifact": "C:\\Projects\\image-blaster\\.image-blaster\\cache\\3f4d9deffbec171d837f4b4d4403193f5ef429387f9055d3722b7105049bc797\\artifacts\\inference\\predictions.npz",
+    "artifactSha256": "598ba11641f8498272f1924d01824b8c8149bd0007c452af6945273e444f439c",
+    "telemetry": {
+      "loadSeconds": 0.36871200000314275,
+      "preprocessSeconds": 0.09698370000114664,
+      "inferenceSeconds": 0.4206242000000202,
+      "inferenceForwardCalls": 2,
+      "warmInferenceSeconds": 0.3614155999966897,
+      "warmMaxDepthDifference": 0,
+      "alignmentSeconds": 0.3262942000001203,
+      "totalSeconds": 6.803956499999913,
+      "peakMemoryBytes": 677560320
+    },
+    "files": [
+      "C:\\Projects\\image-blaster\\.image-blaster\\cache\\3f4d9deffbec171d837f4b4d4403193f5ef429387f9055d3722b7105049bc797\\artifacts\\inference\\predictions.npz",
+      "C:\\Projects\\image-blaster\\.image-blaster\\cache\\3f4d9deffbec171d837f4b4d4403193f5ef429387f9055d3722b7105049bc797\\artifacts\\inference\\worker-result.json"
+    ]
+  },
+  "metrics": {
+    "kind": "synthetic camera-conditioning experiment; explicit oracle cameras supplied, depth inferred",
+    "fixture": "synthetic-room-v1",
+    "prediction": "C:\\Projects\\image-blaster\\.image-blaster\\cache\\3f4d9deffbec171d837f4b4d4403193f5ef429387f9055d3722b7105049bc797\\artifacts\\inference\\predictions.npz",
+    "prediction_sha256": "598ba11641f8498272f1924d01824b8c8149bd0007c452af6945273e444f439c",
+    "fixture_geometry_sha256": "e7958de3ee28d1bb15049011c24bb7f5755d547456761d66f5573cbf7c7a7bf8",
+    "input_hashes": [
+      {
+        "file": "view-01.png",
+        "sha256": "a2a6946feb12b3daed1c4b2051f6d402270463dee76c6f0e505116c8408ca8a7"
+      },
+      {
+        "file": "view-02.png",
+        "sha256": "0a322ec9f025870bbc4bdc9062fb48dd38a33437a0ba135570a5d23f80b06848"
+      },
+      {
+        "file": "view-03.png",
+        "sha256": "daa36b9ab1f6ec90107cf922c916c55bbc9bfc189b1333d5399f7c2ca78c75ae"
+      },
+      {
+        "file": "view-04.png",
+        "sha256": "251de8b6da00c3fd4d4d4748912719b2eb14c22affc621f24db41c8b50bcaae7"
+      }
+    ],
+    "inference_frame": "provider-native metres in supplied scene-y-up camera frame; raw decoder arrays retained in prediction NPZ",
+    "resized_truth": {
+      "width": 252,
+      "height": 196,
+      "scale_x": 0.39375,
+      "scale_y": 0.4083333333333333,
+      "crop": [
+        0,
+        0
+      ],
+      "convention": "pixel-centre resize; exact analytic re-raycast, no depth interpolation"
+    },
+    "valid_fraction": 1,
+    "confidence_policy": "finite positive depths and finite nonnegative confidence; all valid samples, no tuned cutoff",
+    "scale_anchor": {
+      "id": "opening-width",
+      "known_m": 1.2,
+      "inferred_original_units": 0.9660698807328187,
+      "fixed_scale": 1.2421461676144296,
+      "evaluation_only_pixel_annotations": true
+    },
+    "alignment": {
+      "order": "fixed single-anchor scale, then rigid camera-centre rotation/translation; no joint similarity fit",
+      "rotation": [
+        [
+          0.9999633599767199,
+          -0.004058365668001033,
+          -0.007537132888122329
+        ],
+        [
+          0.003965978610261414,
+          0.9999173169509021,
+          -0.0122323454566815
+        ],
+        [
+          0.00758615302583423,
+          0.01220200515544175,
+          0.9998967753485631
+        ]
+      ],
+      "translation_m": [
+        0.03916514557919755,
+        -0.34547320673032633,
+        -0.743864915077594
+      ]
+    },
+    "depth": {
+      "INFERENCE": {
+        "samples": 197568,
+        "abs_rel": 0.05663953683999759,
+        "scale_invariant_log_rmse": 0.07234158763561244,
+        "interpretation": "provider-native metric conditioned inference; use NATIVE for metre accuracy",
+        "rmse_m": 0.20847867829196376
+      },
+      "ALIGNED": {
+        "samples": 197568,
+        "abs_rel": 0.2199598839390918,
+        "rmse_m": 0.570967116982645,
+        "scale_invariant_log_rmse": 0.07234158763561241
+      },
+      "NATIVE": {
+        "samples": 197568,
+        "abs_rel": 0.05663953683999759,
+        "rmse_m": 0.20847867829196376,
+        "scale_invariant_log_rmse": 0.07234158763561244
+      }
+    },
+    "boundaries": {
+      "ALIGNED": {
+        "precision": 0.6597715199097363,
+        "recall": 0.7582834716592678,
+        "f1": 0.7056056945514044,
+        "threshold_m": 0.05,
+        "tolerance_pixels": 1,
+        "predicted_pixels": 21271,
+        "truth_pixels": 15543
+      },
+      "fireplace_opening_ALIGNED": {
+        "precision": 0.759233926128591,
+        "recall": 0.2143212332173048,
+        "f1": 0.3342798808803451,
+        "threshold_m": 0.05,
+        "tolerance_pixels": 1,
+        "predicted_pixels": 731,
+        "truth_pixels": 2011
+      },
+      "fireplace_opening_roi": {
+        "labels": [
+          7,
+          8
+        ],
+        "margin_prediction_pixels": 3
+      },
+      "fireplace_opening_NATIVE": {
+        "precision": 0.7742504409171076,
+        "recall": 0.18697165589259074,
+        "f1": 0.3012059075510415,
+        "threshold_m": 0.05,
+        "tolerance_pixels": 1,
+        "predicted_pixels": 567,
+        "truth_pixels": 2011
+      }
+    },
+    "cameras": {
+      "aligned_rotation_error_degrees": [
+        1.359926907260667,
+        2.547831716743781,
+        2.439808785663719,
+        2.0674566619599504
+      ],
+      "aligned_translation_error_cm": [
+        33.745359490154264,
+        19.528079521198872,
+        16.672143707806914,
+        35.658931083909664
+      ],
+      "camera_baselines": [
+        {
+          "views": [
+            0,
+            1
+          ],
+          "truth_m": 1.0161200716450782,
+          "inference_units": 0.9580709674651677,
+          "aligned_m": 1.190064180539507,
+          "aligned_abs_cm": 17.394410889442867,
+          "aligned_error_percent": 17.11846008639674
+        },
+        {
+          "views": [
+            0,
+            2
+          ],
+          "truth_m": 2.200568108466538,
+          "inference_units": 2.1704607715020727,
+          "aligned_m": 2.696029529278758,
+          "aligned_abs_cm": 49.54614208122199,
+          "aligned_error_percent": 22.51515955838701
+        },
+        {
+          "views": [
+            0,
+            3
+          ],
+          "truth_m": 3.1551545128566993,
+          "inference_units": 3.095254364336952,
+          "aligned_m": 3.8447583464529824,
+          "aligned_abs_cm": 68.96038335962831,
+          "aligned_error_percent": 21.85642036820285
+        },
+        {
+          "views": [
+            1,
+            2
+          ],
+          "truth_m": 1.22065556157337,
+          "inference_units": 1.2630914195785512,
+          "aligned_m": 1.568944166176167,
+          "aligned_abs_cm": 34.828860460279685,
+          "aligned_error_percent": 28.532914244364605
+        },
+        {
+          "views": [
+            1,
+            3
+          ],
+          "truth_m": 2.165063509461097,
+          "inference_units": 2.17993110739879,
+          "aligned_m": 2.707793070718887,
+          "aligned_abs_cm": 54.272956125779004,
+          "aligned_error_percent": 25.067604663148202
+        },
+        {
+          "views": [
+            2,
+            3
+          ],
+          "truth_m": 0.9733961166965892,
+          "inference_units": 0.9299999386744324,
+          "aligned_m": 1.1551958597061007,
+          "aligned_abs_cm": 18.17997430095115,
+          "aligned_error_percent": 18.67685106721862
+        }
+      ],
+      "original_world_to_camera": [
+        [
+          [
+            0.8631876111030579,
+            0,
+            0.5048832893371582,
+            -0.20260478556156158
+          ],
+          [
+            -0.09061215072870255,
+            -0.9837631583213806,
+            0.15491755306720734,
+            1.0108884572982788
+          ],
+          [
+            0.49668562412261963,
+            -0.1794714629650116,
+            -0.8491721749305725,
+            3.5968117713928223
+          ]
+        ],
+        [
+          [
+            0.9731777906417847,
+            0.0037121055647730827,
+            0.2300243079662323,
+            -0.15118370950222015
+          ],
+          [
+            -0.020860008895397186,
+            -0.9943270683288574,
+            0.10430004447698593,
+            1.1030077934265137
+          ],
+          [
+            0.22910656034946442,
+            -0.10630079358816147,
+            -0.9675796031951904,
+            3.317833185195923
+          ]
+        ],
+        [
+          [
+            0.9691206812858582,
+            0.03432789817452431,
+            -0.24418580532073975,
+            0.03725035488605499
+          ],
+          [
+            0.07680709660053253,
+            -0.9830223917961121,
+            0.16663643717765808,
+            1.0493277311325073
+          ],
+          [
+            -0.23431983590126038,
+            -0.1802460253238678,
+            -0.9553039073944092,
+            3.272006034851074
+          ]
+        ],
+        [
+          [
+            0.8269616961479187,
+            -0.0026883690152317286,
+            -0.5622518658638,
+            0.308228075504303
+          ],
+          [
+            0.05190151184797287,
+            -0.9953540563583374,
+            0.0810961127281189,
+            1.2202359437942505
+          ],
+          [
+            -0.5598576664924622,
+            -0.09624509513378143,
+            -0.8229801058769226,
+            3.372687339782715
+          ]
+        ]
+      ],
+      "aligned_world_to_camera": [
+        [
+          [
+            0.8593506114441655,
+            -0.0027525232082004237,
+            0.5113794462434321,
+            0.09412511887503856
+          ],
+          [
+            -0.08778399425438492,
+            -0.9859361886619021,
+            0.14221028098579147,
+            1.0242798839807996
+          ],
+          [
+            0.5037961099008196,
+            -0.1670994117599806,
+            -0.847506497994833,
+            3.7598759534828177
+          ]
+        ],
+        [
+          [
+            0.97139334452646,
+            0.004757664139756144,
+            0.23742853455961124,
+            -0.04757866868895481
+          ],
+          [
+            -0.017610025042775795,
+            -0.9956034188593262,
+            0.0919982469077052,
+            1.0952664905135168
+          ],
+          [
+            0.23682234942005786,
+            -0.09354760463348716,
+            -0.9670387705332699,
+            3.360294035268122
+          ]
+        ],
+        [
+          [
+            0.9707863183822241,
+            0.04115553685827706,
+            -0.23638983234686342,
+            -0.1533746178955009
+          ],
+          [
+            0.07953778574145536,
+            -0.9846748516704206,
+            0.15520706228518458,
+            1.0755777455010724
+          ],
+          [
+            -0.22637949363747578,
+            -0.16947482207868453,
+            -0.9591822455439372,
+            3.301124809680175
+          ]
+        ],
+        [
+          [
+            0.8311800736662446,
+            0.007469224722653446,
+            -0.5559531731300286,
+            -0.060662607308974506
+          ],
+          [
+            0.055327888726858745,
+            -0.9960579128302808,
+            0.06933615909412623,
+            1.2210099542512611
+          ],
+          [
+            -0.5532436450824485,
+            -0.0883905438668922,
+            -0.8283167031200607,
+            3.5643461354861117
+          ]
+        ]
+      ],
+      "independent_model_accuracy": false,
+      "interpretation": "camera outputs are supplied oracle/test input, not independently reconstructed model achievements"
+    },
+    "focal": {
+      "truth_pixels": [
+        [
+          137.8125,
+          142.91666666666666
+        ],
+        [
+          137.8125,
+          142.91666666666666
+        ],
+        [
+          137.8125,
+          142.91666666666666
+        ],
+        [
+          137.8125,
+          142.91666666666666
+        ]
+      ],
+      "inferred_pixels": [
+        [
+          144.703125,
+          150.0625
+        ],
+        [
+          144.703125,
+          150.0625
+        ],
+        [
+          144.703125,
+          150.0625
+        ],
+        [
+          144.703125,
+          150.0625
+        ]
+      ],
+      "absolute_error_pixels": [
+        [
+          6.890625,
+          7.145833333333343
+        ],
+        [
+          6.890625,
+          7.145833333333343
+        ],
+        [
+          6.890625,
+          7.145833333333343
+        ],
+        [
+          6.890625,
+          7.145833333333343
+        ]
+      ],
+      "error_percent": [
+        [
+          5,
+          5.000000000000007
+        ],
+        [
+          5,
+          5.000000000000007
+        ],
+        [
+          5,
+          5.000000000000007
+        ],
+        [
+          5,
+          5.000000000000007
+        ]
+      ],
+      "interpretation": "output intrinsics are supplied processed oracle calibration, not independently inferred focal accuracy"
+    },
+    "dimensions": [
+      {
+        "id": "room",
+        "samples": 150296,
+        "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+        "axes": [
+          {
+            "axis": "width",
+            "truth_m": 4.8,
+            "aligned_observed_extent_m": 5.9240935360491065,
+            "absolute_error_cm": 112.40935360491066,
+            "relative_error_percent": 23.418615334356392,
+            "truth_visible_extent_m": 4.800000000000001,
+            "truth_visibility_fraction": 1.0000000000000002,
+            "complete_axis_observed": true,
+            "original_oriented_extent_relative_units": 4.769240279850853
+          },
+          {
+            "axis": "height",
+            "truth_m": 2.7,
+            "aligned_observed_extent_m": 3.6883932537896227,
+            "absolute_error_cm": 98.83932537896226,
+            "relative_error_percent": 36.6071575477638,
+            "truth_visible_extent_m": 2.7,
+            "truth_visibility_fraction": 1,
+            "complete_axis_observed": true,
+            "original_oriented_extent_relative_units": 2.969371358986895
+          },
+          {
+            "axis": "depth",
+            "truth_m": 3.6,
+            "aligned_observed_extent_m": 3.1972180979467524,
+            "absolute_error_cm": 40.27819020532477,
+            "relative_error_percent": 11.188386168145769,
+            "truth_visible_extent_m": 2.49710787111031,
+            "truth_visibility_fraction": 0.6936410753084193,
+            "complete_axis_observed": false,
+            "original_oriented_extent_relative_units": 2.5739467554668574
+          }
+        ]
+      },
+      {
+        "id": "opening-back",
+        "samples": 5789,
+        "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+        "axes": [
+          {
+            "axis": "width",
+            "truth_m": 1.2,
+            "aligned_observed_extent_m": 1.4597524624516898,
+            "absolute_error_cm": 25.975246245168982,
+            "relative_error_percent": 21.64603853764082,
+            "truth_visible_extent_m": 1.1986153854047523,
+            "truth_visibility_fraction": 0.9988461545039603,
+            "complete_axis_observed": true,
+            "original_oriented_extent_relative_units": 1.1751857394167855
+          },
+          {
+            "axis": "height",
+            "truth_m": 0.9,
+            "aligned_observed_extent_m": 1.0888375318347951,
+            "absolute_error_cm": 18.883753183479513,
+            "relative_error_percent": 20.981947981643902,
+            "truth_visible_extent_m": 0.8870873519755984,
+            "truth_visibility_fraction": 0.9856526133062204,
+            "complete_axis_observed": true,
+            "original_oriented_extent_relative_units": 0.8765776204308812
+          },
+          {
+            "axis": "depth",
+            "truth_m": 0,
+            "aligned_observed_extent_m": 0.29387538826349474,
+            "absolute_error_cm": 29.387538826349473,
+            "relative_error_percent": null,
+            "truth_visible_extent_m": 8.881784197001252e-16,
+            "truth_visibility_fraction": null,
+            "complete_axis_observed": false,
+            "original_oriented_extent_relative_units": 0.23658680107502097
+          }
+        ]
+      },
+      {
+        "id": "opening-recess",
+        "samples": 6908,
+        "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+        "axes": [
+          {
+            "axis": "width",
+            "truth_m": 1.2,
+            "aligned_observed_extent_m": 1.4649746521854712,
+            "absolute_error_cm": 26.497465218547124,
+            "relative_error_percent": 22.081221015455938,
+            "truth_visible_extent_m": 1.1999999999999997,
+            "truth_visibility_fraction": 0.9999999999999998,
+            "complete_axis_observed": true,
+            "original_oriented_extent_relative_units": 1.1793899062611841
+          },
+          {
+            "axis": "height",
+            "truth_m": 0.9,
+            "aligned_observed_extent_m": 1.1773555527187547,
+            "absolute_error_cm": 27.735555271875466,
+            "relative_error_percent": 30.817283635417187,
+            "truth_visible_extent_m": 0.8889034349551574,
+            "truth_visibility_fraction": 0.9876704832835083,
+            "complete_axis_observed": true,
+            "original_oriented_extent_relative_units": 0.9478397819959411
+          },
+          {
+            "axis": "depth",
+            "truth_m": 0.35,
+            "aligned_observed_extent_m": 0.2975139631824972,
+            "absolute_error_cm": 5.24860368175028,
+            "relative_error_percent": 14.996010519286514,
+            "truth_visible_extent_m": 0.24995117401481792,
+            "truth_visibility_fraction": 0.7141462114709084,
+            "complete_axis_observed": false,
+            "original_oriented_extent_relative_units": 0.23951606577338608
+          }
+        ]
+      },
+      {
+        "id": "hearth",
+        "samples": 5352,
+        "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+        "axes": [
+          {
+            "axis": "width",
+            "truth_m": 1.8,
+            "aligned_observed_extent_m": 2.745690305493525,
+            "absolute_error_cm": 94.56903054935249,
+            "relative_error_percent": 52.53835030519583,
+            "truth_visible_extent_m": 1.7998829920919621,
+            "truth_visibility_fraction": 0.9999349956066456,
+            "complete_axis_observed": true,
+            "original_oriented_extent_relative_units": 2.210440588297822
+          },
+          {
+            "axis": "height",
+            "truth_m": 0.14,
+            "aligned_observed_extent_m": 0.6444428856948274,
+            "absolute_error_cm": 50.444288569482744,
+            "relative_error_percent": 360.3163469248767,
+            "truth_visible_extent_m": 0.13998673552234764,
+            "truth_visibility_fraction": 0.9999052537310544,
+            "complete_axis_observed": true,
+            "original_oriented_extent_relative_units": 0.5188140514352629
+          },
+          {
+            "axis": "depth",
+            "truth_m": 0.55,
+            "aligned_observed_extent_m": 0.9074225054291818,
+            "absolute_error_cm": 35.74225054291817,
+            "relative_error_percent": 64.98591007803304,
+            "truth_visible_extent_m": 0.5498617592860677,
+            "truth_visibility_fraction": 0.9997486532473958,
+            "complete_axis_observed": true,
+            "original_oriented_extent_relative_units": 0.7305279596618711
+          }
+        ]
+      },
+      {
+        "id": "mantel",
+        "samples": 2109,
+        "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+        "axes": [
+          {
+            "axis": "width",
+            "truth_m": 1.9,
+            "aligned_observed_extent_m": 2.3906079030424907,
+            "absolute_error_cm": 49.06079030424908,
+            "relative_error_percent": 25.821468581183726,
+            "truth_visible_extent_m": 1.9,
+            "truth_visibility_fraction": 1,
+            "complete_axis_observed": true,
+            "original_oriented_extent_relative_units": 1.9245785764759942
+          },
+          {
+            "axis": "height",
+            "truth_m": 0.11999999999999988,
+            "aligned_observed_extent_m": 0.34197646527918635,
+            "absolute_error_cm": 22.197646527918646,
+            "relative_error_percent": 184.98038773265557,
+            "truth_visible_extent_m": 0.11997558634595995,
+            "truth_visibility_fraction": 0.9997965528830005,
+            "complete_axis_observed": true,
+            "original_oriented_extent_relative_units": 0.27531096918807874
+          },
+          {
+            "axis": "depth",
+            "truth_m": 0.24,
+            "aligned_observed_extent_m": 0.7220581625286414,
+            "absolute_error_cm": 48.20581625286414,
+            "relative_error_percent": 200.85756772026727,
+            "truth_visible_extent_m": 0.23796282793226675,
+            "truth_visibility_fraction": 0.9915117830511115,
+            "complete_axis_observed": true,
+            "original_oriented_extent_relative_units": 0.581298869130169
+          }
+        ]
+      },
+      {
+        "id": "tall-left-box",
+        "samples": 9103,
+        "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+        "axes": [
+          {
+            "axis": "width",
+            "truth_m": 0.48,
+            "aligned_observed_extent_m": 1.3831876327961043,
+            "absolute_error_cm": 90.31876327961044,
+            "relative_error_percent": 188.1640901658551,
+            "truth_visible_extent_m": 0.47999023322681533,
+            "truth_visibility_fraction": 0.9999796525558653,
+            "complete_axis_observed": true,
+            "original_oriented_extent_relative_units": 1.1135465928720354
+          },
+          {
+            "axis": "height",
+            "truth_m": 1,
+            "aligned_observed_extent_m": 1.5182177110659252,
+            "absolute_error_cm": 51.82177110659252,
+            "relative_error_percent": 51.82177110659252,
+            "truth_visible_extent_m": 0.9999125545655936,
+            "truth_visibility_fraction": 0.9999125545655936,
+            "complete_axis_observed": true,
+            "original_oriented_extent_relative_units": 1.2222536692132595
+          },
+          {
+            "axis": "depth",
+            "truth_m": 0.41999999999999993,
+            "aligned_observed_extent_m": 1.3329752004362199,
+            "absolute_error_cm": 91.297520043622,
+            "relative_error_percent": 217.37504772290953,
+            "truth_visible_extent_m": 0.41975990912368033,
+            "truth_visibility_fraction": 0.999428355056382,
+            "complete_axis_observed": true,
+            "original_oriented_extent_relative_units": 1.0731226607543534
+          }
+        ]
+      },
+      {
+        "id": "foreground-stool",
+        "samples": 8699,
+        "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+        "axes": [
+          {
+            "axis": "width",
+            "truth_m": 0.52,
+            "aligned_observed_extent_m": 2.9938622442602068,
+            "absolute_error_cm": 247.38622442602068,
+            "relative_error_percent": 475.742739280809,
+            "truth_visible_extent_m": 0.5200000000000001,
+            "truth_visibility_fraction": 1.0000000000000002,
+            "complete_axis_observed": true,
+            "original_oriented_extent_relative_units": 2.4102334510357895
+          },
+          {
+            "axis": "height",
+            "truth_m": 0.6,
+            "aligned_observed_extent_m": 0.9373306971655718,
+            "absolute_error_cm": 33.73306971655718,
+            "relative_error_percent": 56.22178286092865,
+            "truth_visible_extent_m": 0.5939204810292147,
+            "truth_visibility_fraction": 0.9898674683820246,
+            "complete_axis_observed": true,
+            "original_oriented_extent_relative_units": 0.7546057956816282
+          },
+          {
+            "axis": "depth",
+            "truth_m": 0.52,
+            "aligned_observed_extent_m": 1.8586800527346925,
+            "absolute_error_cm": 133.86800527346924,
+            "relative_error_percent": 257.43847167974855,
+            "truth_visible_extent_m": 0.5199856006261507,
+            "truth_visibility_fraction": 0.9999723088964437,
+            "complete_axis_observed": true,
+            "original_oriented_extent_relative_units": 1.4963456807215614
+          }
+        ]
+      },
+      {
+        "id": "right-seat-box",
+        "samples": 15101,
+        "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+        "axes": [
+          {
+            "axis": "width",
+            "truth_m": 0.76,
+            "aligned_observed_extent_m": 2.645162792714468,
+            "absolute_error_cm": 188.5162792714468,
+            "relative_error_percent": 248.0477358834826,
+            "truth_visible_extent_m": 0.7598087698335085,
+            "truth_visibility_fraction": 0.9997483813598796,
+            "complete_axis_observed": true,
+            "original_oriented_extent_relative_units": 2.1295100863971297
+          },
+          {
+            "axis": "height",
+            "truth_m": 0.8,
+            "aligned_observed_extent_m": 1.2115055240174044,
+            "absolute_error_cm": 41.150552401740434,
+            "relative_error_percent": 51.43819050217554,
+            "truth_visible_extent_m": 0.7996035939523333,
+            "truth_visibility_fraction": 0.9995044924404165,
+            "complete_axis_observed": true,
+            "original_oriented_extent_relative_units": 0.9753324975788709
+          },
+          {
+            "axis": "depth",
+            "truth_m": 0.6599999999999999,
+            "aligned_observed_extent_m": 2.137167031789307,
+            "absolute_error_cm": 147.71670317893071,
+            "relative_error_percent": 223.81318663474352,
+            "truth_visible_extent_m": 0.6598865123023907,
+            "truth_visibility_fraction": 0.9998280489430164,
+            "complete_axis_observed": true,
+            "original_oriented_extent_relative_units": 1.7205439162556735
+          }
+        ]
+      }
+    ],
+    "unverified": [
+      "real photography",
+      "semantic segmentation by provider",
+      "hidden-surface completion",
+      "mesh topology",
+      "materials",
+      "client import",
+      "installation truth"
+    ],
+    "conditioning": {
+      "mode": "pose",
+      "provenance": "experiment-oracle",
+      "cameraConvention": "opencv-world-to-camera-scene-y-up-meters",
+      "workerRequestCameraSha256": "116136cbb754b8a1d53c5170900c7ccbcdfe589632e2d789cbb11785e0704441",
+      "cameraHashEncoding": "python-sorted-compact-json-not-conditioning-file-bytes",
+      "sourceIntrinsics": [
+        [
+          [
+            367.5,
+            0,
+            319.5
+          ],
+          [
+            0,
+            367.5,
+            239.5
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            367.5,
+            0,
+            319.5
+          ],
+          [
+            0,
+            367.5,
+            239.5
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            367.5,
+            0,
+            319.5
+          ],
+          [
+            0,
+            367.5,
+            239.5
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            367.5,
+            0,
+            319.5
+          ],
+          [
+            0,
+            367.5,
+            239.5
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ]
+      ],
+      "processedIntrinsics": [
+        [
+          [
+            144.703125,
+            0,
+            125.80313110351562
+          ],
+          [
+            0,
+            150.0625,
+            97.79583740234375
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            144.703125,
+            0,
+            125.80313110351562
+          ],
+          [
+            0,
+            150.0625,
+            97.79583740234375
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            144.703125,
+            0,
+            125.80313110351562
+          ],
+          [
+            0,
+            150.0625,
+            97.79583740234375
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            144.703125,
+            0,
+            125.80313110351562
+          ],
+          [
+            0,
+            150.0625,
+            97.79583740234375
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ]
+      ],
+      "sourceExtrinsics": [
+        [
+          [
+            0.8631876111030579,
+            0,
+            0.5048832893371582,
+            -0.20260478556156158
+          ],
+          [
+            -0.09061215072870255,
+            -0.9837631583213806,
+            0.15491755306720734,
+            1.0108884572982788
+          ],
+          [
+            0.49668562412261963,
+            -0.1794714629650116,
+            -0.8491721749305725,
+            3.5968117713928223
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            0.9731777906417847,
+            0.0037121055647730827,
+            0.2300243079662323,
+            -0.15118370950222015
+          ],
+          [
+            -0.020860008895397186,
+            -0.9943270683288574,
+            0.10430004447698593,
+            1.1030077934265137
+          ],
+          [
+            0.22910656034946442,
+            -0.10630079358816147,
+            -0.9675796031951904,
+            3.317833185195923
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            0.9691206812858582,
+            0.03432789817452431,
+            -0.24418580532073975,
+            0.03725035488605499
+          ],
+          [
+            0.07680709660053253,
+            -0.9830223917961121,
+            0.16663643717765808,
+            1.0493277311325073
+          ],
+          [
+            -0.23431983590126038,
+            -0.1802460253238678,
+            -0.9553039073944092,
+            3.272006034851074
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            0.8269616961479187,
+            -0.0026883690152317286,
+            -0.5622518658638,
+            0.308228075504303
+          ],
+          [
+            0.05190151184797287,
+            -0.9953540563583374,
+            0.0810961127281189,
+            1.2202359437942505
+          ],
+          [
+            -0.5598576664924622,
+            -0.09624509513378143,
+            -0.8229801058769226,
+            3.372687339782715
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ]
+      ],
+      "normalizedExtrinsics": [
+        [
+          [
+            1,
+            0,
+            2.9802322387695312e-8,
+            -1.399796900614092e-7
+          ],
+          [
+            0,
+            0.9999999403953552,
+            -1.4901161193847656e-8,
+            1.2442639274468092e-7
+          ],
+          [
+            2.9802322387695312e-8,
+            -1.4901161193847656e-8,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            0.9561704397201538,
+            -0.056198764592409134,
+            0.28736692667007446,
+            -0.9751399159431458
+          ],
+          [
+            0.03465325012803078,
+            0.99623042345047,
+            0.07952376455068588,
+            -0.19109366834163666
+          ],
+          [
+            -0.2907528281211853,
+            -0.06608008593320847,
+            0.9545135498046875,
+            -0.1121845692396164
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            0.7132475972175598,
+            -0.15941329300403595,
+            0.6825432181358337,
+            -2.2045059204101562
+          ],
+          [
+            0.15043088793754578,
+            0.9859164357185364,
+            0.07307043671607971,
+            -0.18752935528755188
+          ],
+          [
+            -0.6845789551734924,
+            0.05055828392505646,
+            0.7271832227706909,
+            0.48708003759384155
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            0.4299515187740326,
+            -0.15939074754714966,
+            0.8886711597442627,
+            -2.7554519176483154
+          ],
+          [
+            0.08574481308460236,
+            0.9870529770851135,
+            0.1355518400669098,
+            -0.2585889995098114
+          ],
+          [
+            -0.8987711071968079,
+            0.01791822910308838,
+            0.43805181980133057,
+            1.6667755842208862
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ]
+      ],
+      "normalizationMedianDistanceMeters": 0.9580708146095276,
+      "backbonePoseConditioning": true,
+      "referenceViewBehavior": "source-0-no-reorder",
+      "cameraPredictionIndependent": false,
+      "outputCameraSource": "experiment-oracle-supplied",
+      "depthScaleSource": "supplied-camera-path",
+      "poseAlignmentScale": 0.3286723178558321,
+      "depthScaleMultiplier": 3.0425440345074546,
+      "intrinsicsResizeConvention": "upstream-row-scaling-no-half-pixel-offset",
+      "depthSemantics": "model-inference-conditioned-on-experiment-oracle-cameras"
+    },
+    "scale_sources": {
+      "INFERENCE": "DA3 supplied-camera path",
+      "ALIGNED": "both DA3 supplied-camera path and existing 1.20m benchmark anchor",
+      "NATIVE": "DA3 supplied-camera path; no benchmark anchor or rigid fit"
+    },
+    "held_out_dimensions": {
+      "ALIGNED": [
+        {
+          "id": "room",
+          "samples": 150296,
+          "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+          "axes": [
+            {
+              "axis": "width",
+              "truth_m": 4.8,
+              "aligned_observed_extent_m": 5.9240935360491065,
+              "absolute_error_cm": 112.40935360491066,
+              "relative_error_percent": 23.418615334356392,
+              "truth_visible_extent_m": 4.800000000000001,
+              "truth_visibility_fraction": 1.0000000000000002,
+              "complete_axis_observed": true,
+              "observed_extent_m": 5.9240935360491065,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 4.8,
+              "held_out_absolute_error_cm": 112.40935360491066,
+              "held_out_relative_error_percent": 23.418615334356392
+            },
+            {
+              "axis": "height",
+              "truth_m": 2.7,
+              "aligned_observed_extent_m": 3.6883932537896227,
+              "absolute_error_cm": 98.83932537896226,
+              "relative_error_percent": 36.6071575477638,
+              "truth_visible_extent_m": 2.7,
+              "truth_visibility_fraction": 1,
+              "complete_axis_observed": true,
+              "observed_extent_m": 3.6883932537896227,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 2.7,
+              "held_out_absolute_error_cm": 98.83932537896226,
+              "held_out_relative_error_percent": 36.6071575477638
+            },
+            {
+              "axis": "depth",
+              "truth_m": 3.6,
+              "aligned_observed_extent_m": 3.1972180979467524,
+              "absolute_error_cm": 40.27819020532477,
+              "relative_error_percent": 11.188386168145769,
+              "truth_visible_extent_m": 2.49710787111031,
+              "truth_visibility_fraction": 0.6936410753084193,
+              "complete_axis_observed": false,
+              "observed_extent_m": 3.1972180979467524,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "visible truth span only; hidden extent unverified",
+              "held_out_target_m": 2.49710787111031,
+              "held_out_absolute_error_cm": 70.01102268364426,
+              "held_out_relative_error_percent": 28.036843539528256
+            }
+          ],
+          "predicted_valid_fraction_of_visible_samples": 1
+        },
+        {
+          "id": "opening-back",
+          "samples": 5789,
+          "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+          "axes": [
+            {
+              "axis": "width",
+              "truth_m": 1.2,
+              "aligned_observed_extent_m": 1.4597524624516898,
+              "absolute_error_cm": 25.975246245168982,
+              "relative_error_percent": 21.64603853764082,
+              "truth_visible_extent_m": 1.1986153854047523,
+              "truth_visibility_fraction": 0.9988461545039603,
+              "complete_axis_observed": true,
+              "observed_extent_m": 1.4597524624516898,
+              "independent_accuracy_claim": false,
+              "calibration_dimension_excluded": true,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 1.2,
+              "held_out_absolute_error_cm": null,
+              "held_out_relative_error_percent": null
+            },
+            {
+              "axis": "height",
+              "truth_m": 0.9,
+              "aligned_observed_extent_m": 1.0888375318347951,
+              "absolute_error_cm": 18.883753183479513,
+              "relative_error_percent": 20.981947981643902,
+              "truth_visible_extent_m": 0.8870873519755984,
+              "truth_visibility_fraction": 0.9856526133062204,
+              "complete_axis_observed": true,
+              "observed_extent_m": 1.0888375318347951,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.9,
+              "held_out_absolute_error_cm": 18.883753183479513,
+              "held_out_relative_error_percent": 20.981947981643902
+            },
+            {
+              "axis": "depth",
+              "truth_m": 0,
+              "aligned_observed_extent_m": 0.29387538826349474,
+              "absolute_error_cm": 29.387538826349473,
+              "relative_error_percent": null,
+              "truth_visible_extent_m": 8.881784197001252e-16,
+              "truth_visibility_fraction": null,
+              "complete_axis_observed": false,
+              "observed_extent_m": 0.29387538826349474,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "visible truth span only; hidden extent unverified",
+              "held_out_target_m": 8.881784197001252e-16,
+              "held_out_absolute_error_cm": 29.387538826349385,
+              "held_out_relative_error_percent": 33087427226920770
+            }
+          ],
+          "predicted_valid_fraction_of_visible_samples": 1
+        },
+        {
+          "id": "opening-recess",
+          "samples": 6908,
+          "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+          "axes": [
+            {
+              "axis": "width",
+              "truth_m": 1.2,
+              "aligned_observed_extent_m": 1.4649746521854712,
+              "absolute_error_cm": 26.497465218547124,
+              "relative_error_percent": 22.081221015455938,
+              "truth_visible_extent_m": 1.1999999999999997,
+              "truth_visibility_fraction": 0.9999999999999998,
+              "complete_axis_observed": true,
+              "observed_extent_m": 1.4649746521854712,
+              "independent_accuracy_claim": false,
+              "calibration_dimension_excluded": true,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 1.2,
+              "held_out_absolute_error_cm": null,
+              "held_out_relative_error_percent": null
+            },
+            {
+              "axis": "height",
+              "truth_m": 0.9,
+              "aligned_observed_extent_m": 1.1773555527187547,
+              "absolute_error_cm": 27.735555271875466,
+              "relative_error_percent": 30.817283635417187,
+              "truth_visible_extent_m": 0.8889034349551574,
+              "truth_visibility_fraction": 0.9876704832835083,
+              "complete_axis_observed": true,
+              "observed_extent_m": 1.1773555527187547,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.9,
+              "held_out_absolute_error_cm": 27.735555271875466,
+              "held_out_relative_error_percent": 30.817283635417187
+            },
+            {
+              "axis": "depth",
+              "truth_m": 0.35,
+              "aligned_observed_extent_m": 0.2975139631824972,
+              "absolute_error_cm": 5.24860368175028,
+              "relative_error_percent": 14.996010519286514,
+              "truth_visible_extent_m": 0.24995117401481792,
+              "truth_visibility_fraction": 0.7141462114709084,
+              "complete_axis_observed": false,
+              "observed_extent_m": 0.2975139631824972,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "visible truth span only; hidden extent unverified",
+              "held_out_target_m": 0.24995117401481792,
+              "held_out_absolute_error_cm": 4.756278916767926,
+              "held_out_relative_error_percent": 19.02883207296301
+            }
+          ],
+          "predicted_valid_fraction_of_visible_samples": 1
+        },
+        {
+          "id": "hearth",
+          "samples": 5352,
+          "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+          "axes": [
+            {
+              "axis": "width",
+              "truth_m": 1.8,
+              "aligned_observed_extent_m": 2.745690305493525,
+              "absolute_error_cm": 94.56903054935249,
+              "relative_error_percent": 52.53835030519583,
+              "truth_visible_extent_m": 1.7998829920919621,
+              "truth_visibility_fraction": 0.9999349956066456,
+              "complete_axis_observed": true,
+              "observed_extent_m": 2.745690305493525,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 1.8,
+              "held_out_absolute_error_cm": 94.56903054935249,
+              "held_out_relative_error_percent": 52.53835030519583
+            },
+            {
+              "axis": "height",
+              "truth_m": 0.14,
+              "aligned_observed_extent_m": 0.6444428856948274,
+              "absolute_error_cm": 50.444288569482744,
+              "relative_error_percent": 360.3163469248767,
+              "truth_visible_extent_m": 0.13998673552234764,
+              "truth_visibility_fraction": 0.9999052537310544,
+              "complete_axis_observed": true,
+              "observed_extent_m": 0.6444428856948274,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.14,
+              "held_out_absolute_error_cm": 50.444288569482744,
+              "held_out_relative_error_percent": 360.3163469248767
+            },
+            {
+              "axis": "depth",
+              "truth_m": 0.55,
+              "aligned_observed_extent_m": 0.9074225054291818,
+              "absolute_error_cm": 35.74225054291817,
+              "relative_error_percent": 64.98591007803304,
+              "truth_visible_extent_m": 0.5498617592860677,
+              "truth_visibility_fraction": 0.9997486532473958,
+              "complete_axis_observed": true,
+              "observed_extent_m": 0.9074225054291818,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.55,
+              "held_out_absolute_error_cm": 35.74225054291817,
+              "held_out_relative_error_percent": 64.98591007803304
+            }
+          ],
+          "predicted_valid_fraction_of_visible_samples": 1
+        },
+        {
+          "id": "mantel",
+          "samples": 2109,
+          "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+          "axes": [
+            {
+              "axis": "width",
+              "truth_m": 1.9,
+              "aligned_observed_extent_m": 2.3906079030424907,
+              "absolute_error_cm": 49.06079030424908,
+              "relative_error_percent": 25.821468581183726,
+              "truth_visible_extent_m": 1.9,
+              "truth_visibility_fraction": 1,
+              "complete_axis_observed": true,
+              "observed_extent_m": 2.3906079030424907,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 1.9,
+              "held_out_absolute_error_cm": 49.06079030424908,
+              "held_out_relative_error_percent": 25.821468581183726
+            },
+            {
+              "axis": "height",
+              "truth_m": 0.11999999999999988,
+              "aligned_observed_extent_m": 0.34197646527918635,
+              "absolute_error_cm": 22.197646527918646,
+              "relative_error_percent": 184.98038773265557,
+              "truth_visible_extent_m": 0.11997558634595995,
+              "truth_visibility_fraction": 0.9997965528830005,
+              "complete_axis_observed": true,
+              "observed_extent_m": 0.34197646527918635,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.11999999999999988,
+              "held_out_absolute_error_cm": 22.197646527918646,
+              "held_out_relative_error_percent": 184.98038773265557
+            },
+            {
+              "axis": "depth",
+              "truth_m": 0.24,
+              "aligned_observed_extent_m": 0.7220581625286414,
+              "absolute_error_cm": 48.20581625286414,
+              "relative_error_percent": 200.85756772026727,
+              "truth_visible_extent_m": 0.23796282793226675,
+              "truth_visibility_fraction": 0.9915117830511115,
+              "complete_axis_observed": true,
+              "observed_extent_m": 0.7220581625286414,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.24,
+              "held_out_absolute_error_cm": 48.20581625286414,
+              "held_out_relative_error_percent": 200.85756772026727
+            }
+          ],
+          "predicted_valid_fraction_of_visible_samples": 1
+        },
+        {
+          "id": "tall-left-box",
+          "samples": 9103,
+          "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+          "axes": [
+            {
+              "axis": "width",
+              "truth_m": 0.48,
+              "aligned_observed_extent_m": 1.3831876327961043,
+              "absolute_error_cm": 90.31876327961044,
+              "relative_error_percent": 188.1640901658551,
+              "truth_visible_extent_m": 0.47999023322681533,
+              "truth_visibility_fraction": 0.9999796525558653,
+              "complete_axis_observed": true,
+              "observed_extent_m": 1.3831876327961043,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.48,
+              "held_out_absolute_error_cm": 90.31876327961044,
+              "held_out_relative_error_percent": 188.1640901658551
+            },
+            {
+              "axis": "height",
+              "truth_m": 1,
+              "aligned_observed_extent_m": 1.5182177110659252,
+              "absolute_error_cm": 51.82177110659252,
+              "relative_error_percent": 51.82177110659252,
+              "truth_visible_extent_m": 0.9999125545655936,
+              "truth_visibility_fraction": 0.9999125545655936,
+              "complete_axis_observed": true,
+              "observed_extent_m": 1.5182177110659252,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 1,
+              "held_out_absolute_error_cm": 51.82177110659252,
+              "held_out_relative_error_percent": 51.82177110659252
+            },
+            {
+              "axis": "depth",
+              "truth_m": 0.41999999999999993,
+              "aligned_observed_extent_m": 1.3329752004362199,
+              "absolute_error_cm": 91.297520043622,
+              "relative_error_percent": 217.37504772290953,
+              "truth_visible_extent_m": 0.41975990912368033,
+              "truth_visibility_fraction": 0.999428355056382,
+              "complete_axis_observed": true,
+              "observed_extent_m": 1.3329752004362199,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.41999999999999993,
+              "held_out_absolute_error_cm": 91.297520043622,
+              "held_out_relative_error_percent": 217.37504772290953
+            }
+          ],
+          "predicted_valid_fraction_of_visible_samples": 1
+        },
+        {
+          "id": "foreground-stool",
+          "samples": 8699,
+          "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+          "axes": [
+            {
+              "axis": "width",
+              "truth_m": 0.52,
+              "aligned_observed_extent_m": 2.9938622442602068,
+              "absolute_error_cm": 247.38622442602068,
+              "relative_error_percent": 475.742739280809,
+              "truth_visible_extent_m": 0.5200000000000001,
+              "truth_visibility_fraction": 1.0000000000000002,
+              "complete_axis_observed": true,
+              "observed_extent_m": 2.9938622442602068,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.52,
+              "held_out_absolute_error_cm": 247.38622442602068,
+              "held_out_relative_error_percent": 475.742739280809
+            },
+            {
+              "axis": "height",
+              "truth_m": 0.6,
+              "aligned_observed_extent_m": 0.9373306971655718,
+              "absolute_error_cm": 33.73306971655718,
+              "relative_error_percent": 56.22178286092865,
+              "truth_visible_extent_m": 0.5939204810292147,
+              "truth_visibility_fraction": 0.9898674683820246,
+              "complete_axis_observed": true,
+              "observed_extent_m": 0.9373306971655718,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.6,
+              "held_out_absolute_error_cm": 33.73306971655718,
+              "held_out_relative_error_percent": 56.22178286092865
+            },
+            {
+              "axis": "depth",
+              "truth_m": 0.52,
+              "aligned_observed_extent_m": 1.8586800527346925,
+              "absolute_error_cm": 133.86800527346924,
+              "relative_error_percent": 257.43847167974855,
+              "truth_visible_extent_m": 0.5199856006261507,
+              "truth_visibility_fraction": 0.9999723088964437,
+              "complete_axis_observed": true,
+              "observed_extent_m": 1.8586800527346925,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.52,
+              "held_out_absolute_error_cm": 133.86800527346924,
+              "held_out_relative_error_percent": 257.43847167974855
+            }
+          ],
+          "predicted_valid_fraction_of_visible_samples": 1
+        },
+        {
+          "id": "right-seat-box",
+          "samples": 15101,
+          "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+          "axes": [
+            {
+              "axis": "width",
+              "truth_m": 0.76,
+              "aligned_observed_extent_m": 2.645162792714468,
+              "absolute_error_cm": 188.5162792714468,
+              "relative_error_percent": 248.0477358834826,
+              "truth_visible_extent_m": 0.7598087698335085,
+              "truth_visibility_fraction": 0.9997483813598796,
+              "complete_axis_observed": true,
+              "observed_extent_m": 2.645162792714468,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.76,
+              "held_out_absolute_error_cm": 188.5162792714468,
+              "held_out_relative_error_percent": 248.0477358834826
+            },
+            {
+              "axis": "height",
+              "truth_m": 0.8,
+              "aligned_observed_extent_m": 1.2115055240174044,
+              "absolute_error_cm": 41.150552401740434,
+              "relative_error_percent": 51.43819050217554,
+              "truth_visible_extent_m": 0.7996035939523333,
+              "truth_visibility_fraction": 0.9995044924404165,
+              "complete_axis_observed": true,
+              "observed_extent_m": 1.2115055240174044,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.8,
+              "held_out_absolute_error_cm": 41.150552401740434,
+              "held_out_relative_error_percent": 51.43819050217554
+            },
+            {
+              "axis": "depth",
+              "truth_m": 0.6599999999999999,
+              "aligned_observed_extent_m": 2.137167031789307,
+              "absolute_error_cm": 147.71670317893071,
+              "relative_error_percent": 223.81318663474352,
+              "truth_visible_extent_m": 0.6598865123023907,
+              "truth_visibility_fraction": 0.9998280489430164,
+              "complete_axis_observed": true,
+              "observed_extent_m": 2.137167031789307,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.6599999999999999,
+              "held_out_absolute_error_cm": 147.71670317893071,
+              "held_out_relative_error_percent": 223.81318663474352
+            }
+          ],
+          "predicted_valid_fraction_of_visible_samples": 1
+        }
+      ],
+      "NATIVE": [
+        {
+          "id": "room",
+          "samples": 150296,
+          "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+          "axes": [
+            {
+              "axis": "width",
+              "truth_m": 4.8,
+              "aligned_observed_extent_m": 4.761311895154436,
+              "absolute_error_cm": 3.868810484556384,
+              "relative_error_percent": 0.8060021842825801,
+              "truth_visible_extent_m": 4.800000000000001,
+              "truth_visibility_fraction": 1.0000000000000002,
+              "complete_axis_observed": true,
+              "observed_extent_m": 4.761311895154436,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 4.8,
+              "held_out_absolute_error_cm": 3.868810484556384,
+              "held_out_relative_error_percent": 0.8060021842825801
+            },
+            {
+              "axis": "height",
+              "truth_m": 2.7,
+              "aligned_observed_extent_m": 2.9456649431023907,
+              "absolute_error_cm": 24.56649431023905,
+              "relative_error_percent": 9.098701596384833,
+              "truth_visible_extent_m": 2.7,
+              "truth_visibility_fraction": 1,
+              "complete_axis_observed": true,
+              "observed_extent_m": 2.9456649431023907,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 2.7,
+              "held_out_absolute_error_cm": 24.56649431023905,
+              "held_out_relative_error_percent": 9.098701596384833
+            },
+            {
+              "axis": "depth",
+              "truth_m": 3.6,
+              "aligned_observed_extent_m": 2.6159575556676162,
+              "absolute_error_cm": 98.40424443323839,
+              "relative_error_percent": 27.33451234256622,
+              "truth_visible_extent_m": 2.49710787111031,
+              "truth_visibility_fraction": 0.6936410753084193,
+              "complete_axis_observed": false,
+              "observed_extent_m": 2.6159575556676162,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "visible truth span only; hidden extent unverified",
+              "held_out_target_m": 2.49710787111031,
+              "held_out_absolute_error_cm": 11.884968455730638,
+              "held_out_relative_error_percent": 4.759493409648389
+            }
+          ],
+          "predicted_valid_fraction_of_visible_samples": 1
+        },
+        {
+          "id": "opening-back",
+          "samples": 5789,
+          "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+          "axes": [
+            {
+              "axis": "width",
+              "truth_m": 1.2,
+              "aligned_observed_extent_m": 1.174938568926159,
+              "absolute_error_cm": 2.5061431073840845,
+              "relative_error_percent": 2.0884525894867374,
+              "truth_visible_extent_m": 1.1986153854047523,
+              "truth_visibility_fraction": 0.9988461545039603,
+              "complete_axis_observed": true,
+              "observed_extent_m": 1.174938568926159,
+              "independent_accuracy_claim": false,
+              "calibration_dimension_excluded": true,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 1.2,
+              "held_out_absolute_error_cm": null,
+              "held_out_relative_error_percent": null
+            },
+            {
+              "axis": "height",
+              "truth_m": 0.9,
+              "aligned_observed_extent_m": 0.8765904796509825,
+              "absolute_error_cm": 2.3409520349017554,
+              "relative_error_percent": 2.601057816557506,
+              "truth_visible_extent_m": 0.8870873519755984,
+              "truth_visibility_fraction": 0.9856526133062204,
+              "complete_axis_observed": true,
+              "observed_extent_m": 0.8765904796509825,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.9,
+              "held_out_absolute_error_cm": 2.3409520349017554,
+              "held_out_relative_error_percent": 2.601057816557506
+            },
+            {
+              "axis": "depth",
+              "truth_m": 0,
+              "aligned_observed_extent_m": 0.23138025985824973,
+              "absolute_error_cm": 23.138025985824974,
+              "relative_error_percent": null,
+              "truth_visible_extent_m": 8.881784197001252e-16,
+              "truth_visibility_fraction": null,
+              "complete_axis_observed": false,
+              "observed_extent_m": 0.23138025985824973,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "visible truth span only; hidden extent unverified",
+              "held_out_target_m": 8.881784197001252e-16,
+              "held_out_absolute_error_cm": 23.138025985824882,
+              "held_out_relative_error_percent": 26051101301962450
+            }
+          ],
+          "predicted_valid_fraction_of_visible_samples": 1
+        },
+        {
+          "id": "opening-recess",
+          "samples": 6908,
+          "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+          "axes": [
+            {
+              "axis": "width",
+              "truth_m": 1.2,
+              "aligned_observed_extent_m": 1.178868643668888,
+              "absolute_error_cm": 2.113135633111196,
+              "relative_error_percent": 1.7609463609259968,
+              "truth_visible_extent_m": 1.1999999999999997,
+              "truth_visibility_fraction": 0.9999999999999998,
+              "complete_axis_observed": true,
+              "observed_extent_m": 1.178868643668888,
+              "independent_accuracy_claim": false,
+              "calibration_dimension_excluded": true,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 1.2,
+              "held_out_absolute_error_cm": null,
+              "held_out_relative_error_percent": null
+            },
+            {
+              "axis": "height",
+              "truth_m": 0.9,
+              "aligned_observed_extent_m": 0.948012902514382,
+              "absolute_error_cm": 4.8012902514381945,
+              "relative_error_percent": 5.334766946042438,
+              "truth_visible_extent_m": 0.8889034349551574,
+              "truth_visibility_fraction": 0.9876704832835083,
+              "complete_axis_observed": true,
+              "observed_extent_m": 0.948012902514382,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.9,
+              "held_out_absolute_error_cm": 4.8012902514381945,
+              "held_out_relative_error_percent": 5.334766946042438
+            },
+            {
+              "axis": "depth",
+              "truth_m": 0.35,
+              "aligned_observed_extent_m": 0.23489572532707115,
+              "absolute_error_cm": 11.510427467292883,
+              "relative_error_percent": 32.88693562083681,
+              "truth_visible_extent_m": 0.24995117401481792,
+              "truth_visibility_fraction": 0.7141462114709084,
+              "complete_axis_observed": false,
+              "observed_extent_m": 0.23489572532707115,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "visible truth span only; hidden extent unverified",
+              "held_out_target_m": 0.24995117401481792,
+              "held_out_absolute_error_cm": 1.5055448687746775,
+              "held_out_relative_error_percent": 6.023355860234623
+            }
+          ],
+          "predicted_valid_fraction_of_visible_samples": 1
+        },
+        {
+          "id": "hearth",
+          "samples": 5352,
+          "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+          "axes": [
+            {
+              "axis": "width",
+              "truth_m": 1.8,
+              "aligned_observed_extent_m": 2.210937739752567,
+              "absolute_error_cm": 41.09377397525671,
+              "relative_error_percent": 22.829874430698172,
+              "truth_visible_extent_m": 1.7998829920919621,
+              "truth_visibility_fraction": 0.9999349956066456,
+              "complete_axis_observed": true,
+              "observed_extent_m": 2.210937739752567,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 1.8,
+              "held_out_absolute_error_cm": 41.09377397525671,
+              "held_out_relative_error_percent": 22.829874430698172
+            },
+            {
+              "axis": "height",
+              "truth_m": 0.14,
+              "aligned_observed_extent_m": 0.5138291002402124,
+              "absolute_error_cm": 37.38291002402124,
+              "relative_error_percent": 267.02078588586596,
+              "truth_visible_extent_m": 0.13998673552234764,
+              "truth_visibility_fraction": 0.9999052537310544,
+              "complete_axis_observed": true,
+              "observed_extent_m": 0.5138291002402124,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.14,
+              "held_out_absolute_error_cm": 37.38291002402124,
+              "held_out_relative_error_percent": 267.02078588586596
+            },
+            {
+              "axis": "depth",
+              "truth_m": 0.55,
+              "aligned_observed_extent_m": 0.7175471649932823,
+              "absolute_error_cm": 16.754716499328225,
+              "relative_error_percent": 30.463120907869502,
+              "truth_visible_extent_m": 0.5498617592860677,
+              "truth_visibility_fraction": 0.9997486532473958,
+              "complete_axis_observed": true,
+              "observed_extent_m": 0.7175471649932823,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.55,
+              "held_out_absolute_error_cm": 16.754716499328225,
+              "held_out_relative_error_percent": 30.463120907869502
+            }
+          ],
+          "predicted_valid_fraction_of_visible_samples": 1
+        },
+        {
+          "id": "mantel",
+          "samples": 2109,
+          "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+          "axes": [
+            {
+              "axis": "width",
+              "truth_m": 1.9,
+              "aligned_observed_extent_m": 1.923776287179357,
+              "absolute_error_cm": 2.377628717935698,
+              "relative_error_percent": 1.2513835357556307,
+              "truth_visible_extent_m": 1.9,
+              "truth_visibility_fraction": 1,
+              "complete_axis_observed": true,
+              "observed_extent_m": 1.923776287179357,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 1.9,
+              "held_out_absolute_error_cm": 2.377628717935698,
+              "held_out_relative_error_percent": 1.2513835357556307
+            },
+            {
+              "axis": "height",
+              "truth_m": 0.11999999999999988,
+              "aligned_observed_extent_m": 0.2806143951981883,
+              "absolute_error_cm": 16.061439519818844,
+              "relative_error_percent": 133.84532933182382,
+              "truth_visible_extent_m": 0.11997558634595995,
+              "truth_visibility_fraction": 0.9997965528830005,
+              "complete_axis_observed": true,
+              "observed_extent_m": 0.2806143951981883,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.11999999999999988,
+              "held_out_absolute_error_cm": 16.061439519818844,
+              "held_out_relative_error_percent": 133.84532933182382
+            },
+            {
+              "axis": "depth",
+              "truth_m": 0.24,
+              "aligned_observed_extent_m": 0.5850659793874615,
+              "absolute_error_cm": 34.506597938746154,
+              "relative_error_percent": 143.77749141144233,
+              "truth_visible_extent_m": 0.23796282793226675,
+              "truth_visibility_fraction": 0.9915117830511115,
+              "complete_axis_observed": true,
+              "observed_extent_m": 0.5850659793874615,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.24,
+              "held_out_absolute_error_cm": 34.506597938746154,
+              "held_out_relative_error_percent": 143.77749141144233
+            }
+          ],
+          "predicted_valid_fraction_of_visible_samples": 1
+        },
+        {
+          "id": "tall-left-box",
+          "samples": 9103,
+          "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+          "axes": [
+            {
+              "axis": "width",
+              "truth_m": 0.48,
+              "aligned_observed_extent_m": 1.1152874774914139,
+              "absolute_error_cm": 63.52874774914139,
+              "relative_error_percent": 132.35155781071123,
+              "truth_visible_extent_m": 0.47999023322681533,
+              "truth_visibility_fraction": 0.9999796525558653,
+              "complete_axis_observed": true,
+              "observed_extent_m": 1.1152874774914139,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.48,
+              "held_out_absolute_error_cm": 63.52874774914139,
+              "held_out_relative_error_percent": 132.35155781071123
+            },
+            {
+              "axis": "height",
+              "truth_m": 1,
+              "aligned_observed_extent_m": 1.2218617773669298,
+              "absolute_error_cm": 22.18617773669298,
+              "relative_error_percent": 22.18617773669298,
+              "truth_visible_extent_m": 0.9999125545655936,
+              "truth_visibility_fraction": 0.9999125545655936,
+              "complete_axis_observed": true,
+              "observed_extent_m": 1.2218617773669298,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 1,
+              "held_out_absolute_error_cm": 22.18617773669298,
+              "held_out_relative_error_percent": 22.18617773669298
+            },
+            {
+              "axis": "depth",
+              "truth_m": 0.41999999999999993,
+              "aligned_observed_extent_m": 1.0596067618316685,
+              "absolute_error_cm": 63.96067618316685,
+              "relative_error_percent": 152.28732424563538,
+              "truth_visible_extent_m": 0.41975990912368033,
+              "truth_visibility_fraction": 0.999428355056382,
+              "complete_axis_observed": true,
+              "observed_extent_m": 1.0596067618316685,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.41999999999999993,
+              "held_out_absolute_error_cm": 63.96067618316685,
+              "held_out_relative_error_percent": 152.28732424563538
+            }
+          ],
+          "predicted_valid_fraction_of_visible_samples": 1
+        },
+        {
+          "id": "foreground-stool",
+          "samples": 8699,
+          "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+          "axes": [
+            {
+              "axis": "width",
+              "truth_m": 0.52,
+              "aligned_observed_extent_m": 2.4099631921002116,
+              "absolute_error_cm": 188.99631921002117,
+              "relative_error_percent": 363.45446001927144,
+              "truth_visible_extent_m": 0.5200000000000001,
+              "truth_visibility_fraction": 1.0000000000000002,
+              "complete_axis_observed": true,
+              "observed_extent_m": 2.4099631921002116,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.52,
+              "held_out_absolute_error_cm": 188.99631921002117,
+              "held_out_relative_error_percent": 363.45446001927144
+            },
+            {
+              "axis": "height",
+              "truth_m": 0.6,
+              "aligned_observed_extent_m": 0.7603433066266838,
+              "absolute_error_cm": 16.034330662668385,
+              "relative_error_percent": 26.723884437780644,
+              "truth_visible_extent_m": 0.5939204810292147,
+              "truth_visibility_fraction": 0.9898674683820246,
+              "complete_axis_observed": true,
+              "observed_extent_m": 0.7603433066266838,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.6,
+              "held_out_absolute_error_cm": 16.034330662668385,
+              "held_out_relative_error_percent": 26.723884437780644
+            },
+            {
+              "axis": "depth",
+              "truth_m": 0.52,
+              "aligned_observed_extent_m": 1.4926430907806703,
+              "absolute_error_cm": 97.26430907806703,
+              "relative_error_percent": 187.04674822705195,
+              "truth_visible_extent_m": 0.5199856006261507,
+              "truth_visibility_fraction": 0.9999723088964437,
+              "complete_axis_observed": true,
+              "observed_extent_m": 1.4926430907806703,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.52,
+              "held_out_absolute_error_cm": 97.26430907806703,
+              "held_out_relative_error_percent": 187.04674822705195
+            }
+          ],
+          "predicted_valid_fraction_of_visible_samples": 1
+        },
+        {
+          "id": "right-seat-box",
+          "samples": 15101,
+          "estimator": "evaluation-only semantic point bounds; incomplete extents are lower bounds, not hidden geometry",
+          "axes": [
+            {
+              "axis": "width",
+              "truth_m": 0.76,
+              "aligned_observed_extent_m": 2.1188942190943996,
+              "absolute_error_cm": 135.88942190943996,
+              "relative_error_percent": 178.80187093347362,
+              "truth_visible_extent_m": 0.7598087698335085,
+              "truth_visibility_fraction": 0.9997483813598796,
+              "complete_axis_observed": true,
+              "observed_extent_m": 2.1188942190943996,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.76,
+              "held_out_absolute_error_cm": 135.88942190943996,
+              "held_out_relative_error_percent": 178.80187093347362
+            },
+            {
+              "axis": "height",
+              "truth_m": 0.8,
+              "aligned_observed_extent_m": 0.9687571931639664,
+              "absolute_error_cm": 16.87571931639663,
+              "relative_error_percent": 21.09464914549579,
+              "truth_visible_extent_m": 0.7996035939523333,
+              "truth_visibility_fraction": 0.9995044924404165,
+              "complete_axis_observed": true,
+              "observed_extent_m": 0.9687571931639664,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.8,
+              "held_out_absolute_error_cm": 16.87571931639663,
+              "held_out_relative_error_percent": 21.09464914549579
+            },
+            {
+              "axis": "depth",
+              "truth_m": 0.6599999999999999,
+              "aligned_observed_extent_m": 1.722015466049978,
+              "absolute_error_cm": 106.20154660499782,
+              "relative_error_percent": 160.9114342499967,
+              "truth_visible_extent_m": 0.6598865123023907,
+              "truth_visibility_fraction": 0.9998280489430164,
+              "complete_axis_observed": true,
+              "observed_extent_m": 1.722015466049978,
+              "independent_accuracy_claim": true,
+              "calibration_dimension_excluded": false,
+              "evaluation_target": "authored full dimension",
+              "held_out_target_m": 0.6599999999999999,
+              "held_out_absolute_error_cm": 106.20154660499782,
+              "held_out_relative_error_percent": 160.9114342499967
+            }
+          ],
+          "predicted_valid_fraction_of_visible_samples": 1
+        }
+      ]
+    },
+    "cross_view": {
+      "ALIGNED": {
+        "method": "fixed adjacent source-to-target pairs; GT-only bounds, 2cm visibility tolerance, same labels in target bilinear footprint and <=5cm truth depth footprint span; no prediction quality cutoff or missing filling; predicted points projected into fixed truth target camera",
+        "pairs": [
+          {
+            "source_view": 1,
+            "target_view": 0,
+            "truth_visible_correspondences": 38175,
+            "valid_prediction_correspondences": 38175,
+            "prediction_coverage": 1,
+            "nonprojectable_prediction_correspondences": 0,
+            "reprojection_rmse_pixels": 9.656391764808916,
+            "duplicate_surface_scatter_rmse_cm": 21.22195820661647,
+            "relative_view_offset_cm": [
+              13.051868605453103,
+              5.912740878503188,
+              2.676171803503292
+            ],
+            "relative_view_residual_scatter_rmse_cm": 15.423937104746537
+          },
+          {
+            "source_view": 2,
+            "target_view": 1,
+            "truth_visible_correspondences": 35018,
+            "valid_prediction_correspondences": 35018,
+            "prediction_coverage": 1,
+            "nonprojectable_prediction_correspondences": 0,
+            "reprojection_rmse_pixels": 7.515050103595175,
+            "duplicate_surface_scatter_rmse_cm": 20.903894995740536,
+            "relative_view_offset_cm": [
+              2.334133935653017,
+              -0.4831085625992891,
+              -5.726337298562071
+            ],
+            "relative_view_residual_scatter_rmse_cm": 19.962472592923437
+          },
+          {
+            "source_view": 3,
+            "target_view": 2,
+            "truth_visible_correspondences": 33033,
+            "valid_prediction_correspondences": 33033,
+            "prediction_coverage": 1,
+            "nonprojectable_prediction_correspondences": 0,
+            "reprojection_rmse_pixels": 9.275396091420527,
+            "duplicate_surface_scatter_rmse_cm": 21.916610990476485,
+            "relative_view_offset_cm": [
+              -7.360654194465957,
+              14.00183907317738,
+              2.448343999133241
+            ],
+            "relative_view_residual_scatter_rmse_cm": 14.970394830067631
+          },
+          {
+            "source_view": 0,
+            "target_view": 3,
+            "truth_visible_correspondences": 25852,
+            "valid_prediction_correspondences": 25852,
+            "prediction_coverage": 1,
+            "nonprojectable_prediction_correspondences": 0,
+            "reprojection_rmse_pixels": 14.928520463343222,
+            "duplicate_surface_scatter_rmse_cm": 40.5125783156304,
+            "relative_view_offset_cm": [
+              -7.371845130253364,
+              -20.806222426773616,
+              -15.877386647324604
+            ],
+            "relative_view_residual_scatter_rmse_cm": 30.032226070250463
+          }
+        ],
+        "truth_visible_correspondences": 132078,
+        "valid_prediction_correspondences": 132078,
+        "prediction_coverage": 1,
+        "nonprojectable_prediction_correspondences": 0,
+        "reprojection_rmse_pixels": 10.347122933971166,
+        "duplicate_surface_scatter_rmse_cm": 26.218533049930315
+      },
+      "NATIVE": {
+        "method": "fixed adjacent source-to-target pairs; GT-only bounds, 2cm visibility tolerance, same labels in target bilinear footprint and <=5cm truth depth footprint span; no prediction quality cutoff or missing filling; predicted points projected into fixed truth target camera",
+        "pairs": [
+          {
+            "source_view": 1,
+            "target_view": 0,
+            "truth_visible_correspondences": 38175,
+            "valid_prediction_correspondences": 38175,
+            "prediction_coverage": 1,
+            "nonprojectable_prediction_correspondences": 0,
+            "reprojection_rmse_pixels": 6.781241389595921,
+            "duplicate_surface_scatter_rmse_cm": 17.08491219465237,
+            "relative_view_offset_cm": [
+              10.542351921843487,
+              4.743352719161825,
+              2.016828022964228
+            ],
+            "relative_view_residual_scatter_rmse_cm": 12.417167566010825
+          },
+          {
+            "source_view": 2,
+            "target_view": 1,
+            "truth_visible_correspondences": 35018,
+            "valid_prediction_correspondences": 35018,
+            "prediction_coverage": 1,
+            "nonprojectable_prediction_correspondences": 0,
+            "reprojection_rmse_pixels": 7.869412298330882,
+            "duplicate_surface_scatter_rmse_cm": 16.828852787822026,
+            "relative_view_offset_cm": [
+              1.8425299721985513,
+              -0.4527761696984802,
+              -4.618964720738306
+            ],
+            "relative_view_residual_scatter_rmse_cm": 16.07095293081476
+          },
+          {
+            "source_view": 3,
+            "target_view": 2,
+            "truth_visible_correspondences": 33033,
+            "valid_prediction_correspondences": 33033,
+            "prediction_coverage": 1,
+            "nonprojectable_prediction_correspondences": 0,
+            "reprojection_rmse_pixels": 11.208243718676833,
+            "duplicate_surface_scatter_rmse_cm": 17.64414813803101,
+            "relative_view_offset_cm": [
+              -5.865879703523578,
+              11.319463568293003,
+              1.877632622247514
+            ],
+            "relative_view_residual_scatter_rmse_cm": 12.052039623338874
+          },
+          {
+            "source_view": 0,
+            "target_view": 3,
+            "truth_visible_correspondences": 25852,
+            "valid_prediction_correspondences": 25852,
+            "prediction_coverage": 1,
+            "nonprojectable_prediction_correspondences": 0,
+            "reprojection_rmse_pixels": 10.628480338025955,
+            "duplicate_surface_scatter_rmse_cm": 32.61498475130004,
+            "relative_view_offset_cm": [
+              -6.097946071906354,
+              -16.88071900239605,
+              -12.531275818180216
+            ],
+            "relative_view_residual_scatter_rmse_cm": 24.17769088152327
+          }
+        ],
+        "truth_visible_correspondences": 132078,
+        "valid_prediction_correspondences": 132078,
+        "prediction_coverage": 1,
+        "nonprojectable_prediction_correspondences": 0,
+        "reprojection_rmse_pixels": 9.123603404619429,
+        "duplicate_surface_scatter_rmse_cm": 21.107445913779713
+      }
+    },
+    "native_alignment": "none: supplied camera frame and official DA3 metric scale retained; no rigid fit of perturbed cameras",
+    "processed_intrinsics_against_frozen_truth": {
+      "processed": [
+        [
+          [
+            144.703125,
+            0,
+            125.80313110351562
+          ],
+          [
+            0,
+            150.0625,
+            97.79583740234375
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            144.703125,
+            0,
+            125.80313110351562
+          ],
+          [
+            0,
+            150.0625,
+            97.79583740234375
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            144.703125,
+            0,
+            125.80313110351562
+          ],
+          [
+            0,
+            150.0625,
+            97.79583740234375
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            144.703125,
+            0,
+            125.80313110351562
+          ],
+          [
+            0,
+            150.0625,
+            97.79583740234375
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ]
+      ],
+      "frozen_evaluation": [
+        [
+          [
+            137.8125,
+            0,
+            125.5
+          ],
+          [
+            0,
+            142.91666666666666,
+            97.5
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            137.8125,
+            0,
+            125.5
+          ],
+          [
+            0,
+            142.91666666666666,
+            97.5
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            137.8125,
+            0,
+            125.5
+          ],
+          [
+            0,
+            142.91666666666666,
+            97.5
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            137.8125,
+            0,
+            125.5
+          ],
+          [
+            0,
+            142.91666666666666,
+            97.5
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ]
+      ],
+      "difference": [
+        [
+          [
+            6.890625,
+            0,
+            0.303131103515625
+          ],
+          [
+            0,
+            7.145833333333343,
+            0.29583740234375
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            6.890625,
+            0,
+            0.303131103515625
+          ],
+          [
+            0,
+            7.145833333333343,
+            0.29583740234375
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            6.890625,
+            0,
+            0.303131103515625
+          ],
+          [
+            0,
+            7.145833333333343,
+            0.29583740234375
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            6.890625,
+            0,
+            0.303131103515625
+          ],
+          [
+            0,
+            7.145833333333343,
+            0.29583740234375
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ]
+      ],
+      "interpretation": "frozen evaluator retains pixel-centre resize; official supplied-K processing can differ in principal point; neither path is silently adjusted"
+    }
+  }
+}

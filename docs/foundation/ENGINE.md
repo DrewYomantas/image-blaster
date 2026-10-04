@@ -128,3 +128,10 @@ Codex retires Bash-only session hooks, key-paste onboarding, provider-required s
 ## Verification limits
 
 Tests cover real Windows subprocess entrypoints, schema/reference/provenance failures, measured overrides, conflict resolution, cache reuse/invalidation/integrity/concurrency/junction containment, spend policy and real retained provider modules using mocked fetch. The standalone CLI is exercised without an agent and with network explicitly disabled. App tests/typecheck/build are separate evidence from browser rendering or live splat quality. No lint configuration existed upstream; `npm run check:syntax` checks all engine/test/legacy script syntax, not stylistic lint. DA3 Small CPU execution and synthetic quality are measured in GEOMETRY-BENCHMARK.md. Real photos, other models/hardware, hosted output, actual client imports and physical/user acceptance remain unverified.
+
+
+## Additive experiment camera inputs
+
+DA3's separate top-level conditioning contract is experiment-only and absent by default; it never reads benchmark truth implicitly. Normalized conditioning mode/matrices/provenance enter generation cache identity. Unsupported providers reject it. Intrinsics-only is a pinned-revision negative control and is not a production camera-solving feature. Evaluation metadata does not invalidate generation.
+
+SceneSpec v1 adds metre scale `supplied-camera`. Oracle cameras are user-specified calibration with user-input provenance, not model achievements, field measurements, manufacturer sources or registered geometry. Conditioned depth remains inferred visual-only evidence; raw conditioned decoder predictions are explicitly non-independent. Existing measured precedence and whole-scene Benson technical export gate remain unchanged. See CAMERA-CONDITIONING-BENCHMARK.md for results and limitations.

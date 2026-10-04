@@ -57,3 +57,18 @@ Finite positive depths with finite nonnegative confidence are evaluated, with no
 The evaluator writes numeric `report.json`, separately saved `aligned.npz`, four GT/INFERENCE/ALIGNED depth PNG sets and four ALIGNED cross-view point projections. Raster banners and filenames label synthetic GT, inference and aligned evidence. Depth colours use the same 0-6 numerical range; original inference units are uncalibrated, aligned and truth units are metres. Cross-view projections use the next source image reprojected into the target GT camera, exposing camera/depth consistency. Holes and lack of surfaces are retained, not filled.
 
 The tests verify deterministic image hashes and truth separation, exact proper camera geometry, full truth-ray coverage, visible semantic instances, known scale plus arbitrary gauge recovery, distortion remaining after single-anchor alignment, absent-boundary failure and invalid-rotation rejection. Oracle arrays are test-only, never reconstruction-provider evidence. Passing these checks verifies fixture/evaluator mechanics. It does not verify DA3 quality, a real room, topology, materials, imports or installation use.
+
+
+## Frozen camera-conditioning follow-up
+
+The original fixture and Lane A receipt are immutable. Regenerate only into a separate hash-check directory:
+
+```powershell
+& workers/da3/.venv/Scripts/python.exe benchmarks/geometry/fixture.py --out .image-blaster/benchmark/camera-conditioning-v1/frozen-fixture
+& workers/da3/.venv/Scripts/python.exe benchmarks/geometry/conditioning.py --truth .image-blaster/benchmark/synthetic-room-v1/ground-truth/geometry.json --out docs/foundation/geometry-results/camera-conditioning-v1
+node benchmarks/geometry/camera-run.mjs
+```
+
+Runner uses canonical existing truth and original local A NPZ identified by the committed receipt; retain those ignored artifacts for replay. It verifies four regenerated hashes, original A numbers/hash, predeclared conditioning hashes and all cache hits. Explicit worker receipts distinguish native supplied-camera scale from the original fixed-anchor evaluation. Supplemental v2 adds per-entity scatter and correct planarity/unit labeling; initial v1 inference receipts and NPZs remain unchanged. Do not apply original evaluator to conditioned tensors without their worker receipt.
+
+Depth/labels/dimensions/anchors never enter the provider. B is a negative control; C is an oracle upper bound; D is the frozen perturbation set in conditioning-declaration.json. See ../../docs/foundation/CAMERA-CONDITIONING-BENCHMARK.md for numerical tables, scientific figures, runtime, cache, licensing and Outcome2. The visible-span/per-entity supplements preserve old core rules and never fill geometry.

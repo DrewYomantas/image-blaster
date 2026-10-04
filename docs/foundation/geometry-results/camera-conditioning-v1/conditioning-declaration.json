@@ -1,0 +1,74 @@
+{
+  "kind": "experiment-only oracle cameras derived from frozen synthetic evaluation truth",
+  "truth_sha256": "e7958de3ee28d1bb15049011c24bb7f5755d547456761d66f5573cbf7c7a7bf8",
+  "perturbation": {
+    "declared_before_inference": true,
+    "focal_multiplier": 1.05,
+    "local_xyz_euler_degrees": [
+      [
+        2,
+        0,
+        0
+      ],
+      [
+        0,
+        -2,
+        0
+      ],
+      [
+        0,
+        0,
+        2
+      ],
+      [
+        -1.2,
+        1.6,
+        0
+      ]
+    ],
+    "world_camera_centre_offsets_m": [
+      [
+        0.03,
+        0.04,
+        0
+      ],
+      [
+        -0.04,
+        0,
+        0.03
+      ],
+      [
+        0,
+        -0.03,
+        -0.04
+      ],
+      [
+        -0.03,
+        0.04,
+        0
+      ]
+    ],
+    "rotation_application": "Rz @ Ry @ Rx @ original_world_to_camera_rotation; translation recomputed from perturbed centre",
+    "fixture_images_and_cameras_unchanged": true
+  },
+  "lanes": {
+    "B": {
+      "file": "lane-B-conditioning.json",
+      "sha256": "8dedaf8defe71c077cf0542c7ae8871386931e3e3be3e7dc67059e18ebccf84b"
+    },
+    "C": {
+      "file": "lane-C-conditioning.json",
+      "sha256": "c11dbb42a4881b4252cffcb465b4558adb5ef80fa31e61bec27bc28828c86bc2"
+    },
+    "D": {
+      "file": "lane-D-conditioning.json",
+      "sha256": "7a938dd66d2c8a411390fc6f4a3c893969664b583d70435940c0a2ac85fdb710"
+    }
+  },
+  "forbidden_inputs_absent": [
+    "depth",
+    "labels",
+    "object dimensions",
+    "opening scale anchor"
+  ]
+}
