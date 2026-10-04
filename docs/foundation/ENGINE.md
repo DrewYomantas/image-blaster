@@ -14,11 +14,12 @@ operator / CLI
   -> internal TPS/Benson manifest adapters
 ```
 
-`engine/providers.mjs` defines seven capability boundaries: SceneAnalysis (`scene-analysis`), ImageEdit (`image-edit`), Object3D (`object-3d`), WorldReconstruction (`world-reconstruction`), Material (`material`), Audio (`audio`) and Decision (`decision`). Interfaces are runtime provider objects rather than a parallel TypeScript implementation. All must supply `id`, `capability`, `mode`, `billing`, `model`, `version`, `defaults`, `extra`, `license` and `generate(request)`. `generate` returns `{result: <finite JSON>, files: <local absolute paths[]>}`. Plugins are trusted code, not a security sandbox.
+`engine/providers.mjs` defines eight capability boundaries: SceneAnalysis (`scene-analysis`), SceneGeometry (`scene-geometry`), ImageEdit (`image-edit`), Object3D (`object-3d`), WorldReconstruction (`world-reconstruction`), Material (`material`), Audio (`audio`) and Decision (`decision`). Geometry produces depth/camera/point evidence without semantic recognition. All runtime providers supply `id`, `capability`, `mode`, `billing`, `model`, `version`, `implementationFiles`, `defaults`, `extra`, `license` and `generate(request)`. `generate` returns `{result: <finite JSON>, files: <local absolute paths[]>}`. Plugins are trusted code, not a security sandbox.
 
 | Registered implementation | Mode/billing | Current behavior |
 | --- | --- | --- |
 | `local-evidence` | local/free | Hashes and stages explicit source images; validates/preserves supplied SceneSpec. No semantic image understanding or reconstruction |
+| `da3-small` | local/free | Optional isolated Python CPU worker; inferred relative multi-view depth/cameras, NPZ tensors and receipts. No semantics, metric truth, meshes or installation approval |
 | `procedural-box` | local/free | Deterministic eight-vertex/twelve-triangle OBJ at explicit metre dimensions; visual-only, no textures or collision approval |
 | `fal-hunyuan` | paid-api/metered | Existing Hunyuan v3 FAL object implementation |
 | `fal-meshy` | paid-api/metered | Existing Meshy v6 FAL object implementation |
@@ -27,15 +28,19 @@ operator / CLI
 | `world-labs` | paid-api/metered | Existing Marble 1.1 world generation/download; output directory now explicitly routable into the cache |
 | `fal-elevenlabs` | paid-api/metered | Existing ElevenLabs SFX v2 with optional ffmpeg/ffprobe postprocessing |
 
-Material and Decision boundaries have no implementation. No open model or actual remote self-hosted worker is installed. A custom self-hosted provider may declare `billing: "free"` for owned hardware; a metered cloud worker must use the spend policy. This is a trusted registration decision, not automatic cloud discovery. `auto` selects local, then configured self-hosted. It never implicitly falls back to paid APIs; explicit provider selection still requires its billing guard.
+Material and Decision boundaries have no implementation. DA3 requires a separately installed local worker; Node startup, other providers and tests do not import Python or download weights. No remote worker is provisioned. A custom self-hosted provider may declare `billing: "free"` for owned hardware; a metered cloud worker must use the spend policy. `auto` selects local, then configured self-hosted and never implicitly falls back to paid APIs.
 
 Hosted adapter versions identify the retained upstream implementation, not an immutable vendor checkpoint. Endpoint aliases can change server-side. Record a returned checkpoint revision when available; otherwise it stays unknown and invalidate adapter version before a benchmark when behavior changes. There is no claim of hosted model reproducibility.
 
 ## SceneSpec v1
 
+The geometry milestone adds optional camera `projection` and `pose` evidence arrays without changing schema version. Projection values hold positive-focal 3x3 OpenCV intrinsics and processed image dimensions. Pose values hold a proper 3x4 world-to-camera matrix, explicit frame, units and scale status. Raw DA3 poses use `opencv-model-world`, `relative`, `ambiguous`; they do not claim first-camera origin or canonical metre placement. Anchored metric poses must declare `scene-y-up`, `meters`, `anchored`. Original image dimensions and half-pixel resize/crop mapping remain in `properties.inputPixelTransform`. Original and calibrated evidence are distinct; consumers must select explicit unit/frame values rather than treating relative numbers as metres. Large depth/confidence/point arrays stay in artifacts.
+
+Artifact provider metadata optionally retains `implementation` digest and immutable `checkpoint` receipt. Scene-analysis **and scene-geometry** run the same provenance-preservation gate, including camera fact ownership. Inference cannot create measurement, registered geometry or installation approval. The synthetic benchmark's entity labels/masks are evaluation annotations, not DA3 object recognition.
+
 Canonical schema: `engine/scene.schema.json`. Runtime/semantic validation: `engine/scene.mjs`. Store canonical scenes as `scene-spec.json`; upstream `worlds/<slug>/scene.json` remains editor placement state and is not migrated automatically.
 
-Root fields are `schemaVersion`, `id`, `coordinates`, `sources`, `cameras`, `surfaces`, `objects`, `relationships`, `materials`, `artifacts`, `validations`. Frame is metres, right-handed, Y-up, intrinsic XYZ rotation values in radians. Adapter manifests preserve this frame and require client-specific conversion; no coordinate conversion/import is implemented yet. Pivots/camera intrinsics/era/context/physical datums can be explicit evidence in entity `properties` rather than implicit undocumented guesses.
+Root fields are `schemaVersion`, `id`, `coordinates`, `sources`, `cameras`, `surfaces`, `objects`, `relationships`, `materials`, `artifacts`, `validations`. Scene placement/dimensions use metres, right-handed, Y-up, intrinsic XYZ rotation values in radians. Camera evidence and external tensors may explicitly retain another frame/unit. Client conversion/import is not implemented. Era/context/physical datums can remain explicit entity properties.
 
 Each important fact has an identity, typed JSON value, provenance state, source IDs and confidence. Entity dimensions hold **arrays of evidence per width/height/depth axis**, not a single replaceable scalar:
 
@@ -73,6 +78,12 @@ Supply the local images first. `--cache-dir` can choose engine-owned storage. Do
 Request documents use `{ "request": { capability, providerId, mode, inputs, parameters, prompt, scene? }, "spend": { ... } }`. Inputs are local `{path, mediaType?, role?, license?}`. Remote URLs/data URIs must be staged first so the engine hashes actual bytes. Effective requests include hashes, media/extension/role/license, selected provider/model/adapter version, normalized typed defaults, prompt and complete relevant SceneSpec. Unknown/incorrect parameter types fail before submission. Explicit defaults share cache identity; Hunyuan's unused polygon option is removed unless LowPoly is selected. World requests require an explicit nonempty caption, avoiding upstream implicit workspace caption fallback. No prompt or provider is guessed from an AI conversation.
 
 ## Content-addressed manifests and retry policy
+
+`engine/identity.mjs` fingerprints explicit implementation roots and their static local JS/JSON imports, retaining relative helper bindings and hashing bytes. Variable imports require explicit roots; non-JS helpers/configs must be declared or covered by an identity handshake. No repository-wide or arbitrary dependency-tree hash occurs. Custom captured output configuration belongs in `implementationConfig`; arbitrary closure state is not automatically discoverable. Injected runtimes have distinct identity and must declare material captured configuration.
+
+Effective identity includes implementation digest and checkpoint revision/hash/config/runtime receipt. DA3 preflight verifies actual reviewed weights/config, exact upstream source blobs and installed package versions without model imports/inference. Code/checkpoint/config changes miss even if `version` was not changed. Identity is rechecked before completion. Timestamps, host names and executable/cache locations do not enter the key. Hosted checkpoint drift remains unknown and cannot be repaired by local hashing.
+
+Use one process per CLI request and restart an embedding process after implementation edits. Node can retain old imported modules while disk bytes change; this foundation is not a hot-reloading provider runtime. Pre/post checks reject changes during execution but cannot discover arbitrary plugin closure configuration.
 
 `.image-blaster/cache/<sha256>/` contains `inputs/`, `artifacts/` and `manifest.json`; sibling `<sha256>.lock/` prevents overlapping identical jobs. The manifest records effective request, input bytes/hash, provider/license, spend approval/estimate, lifecycle timestamps, local artifact checksums/lengths, result and result hash. Persisted manifest writes use temporary file replacement. Identical complete requests reuse artifacts without a new submission or fresh spend approval; cache hits recheck source/artifact bytes and result/request hashes.
 
@@ -116,4 +127,4 @@ Codex retires Bash-only session hooks, key-paste onboarding, provider-required s
 
 ## Verification limits
 
-Tests cover real Windows subprocess entrypoints, schema/reference/provenance failures, measured overrides, conflict resolution, cache reuse/invalidation/integrity/concurrency/junction containment, spend policy and real retained provider modules using mocked fetch. The standalone CLI is exercised without an agent and with network explicitly disabled. App tests/typecheck/build are separate evidence from browser rendering or live splat quality. No lint configuration existed upstream; `npm run check:syntax` checks all engine/test/legacy script syntax, not stylistic lint. Provider quality, real hosted output, open-model hardware, actual client import/exports and physical/user acceptance remain unverified.
+Tests cover real Windows subprocess entrypoints, schema/reference/provenance failures, measured overrides, conflict resolution, cache reuse/invalidation/integrity/concurrency/junction containment, spend policy and real retained provider modules using mocked fetch. The standalone CLI is exercised without an agent and with network explicitly disabled. App tests/typecheck/build are separate evidence from browser rendering or live splat quality. No lint configuration existed upstream; `npm run check:syntax` checks all engine/test/legacy script syntax, not stylistic lint. DA3 Small CPU execution and synthetic quality are measured in GEOMETRY-BENCHMARK.md. Real photos, other models/hardware, hosted output, actual client imports and physical/user acceptance remain unverified.

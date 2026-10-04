@@ -1,5 +1,7 @@
 # Provider and model research
 
+Subsequent execution evidence: the [DA3 Small CPU experiment](GEOMETRY-BENCHMARK.md) now tests the selected Apache checkpoint locally. This document remains the dated procurement study; its original "no model installed/run" statement describes that research pass. Synthetic dimensional accuracy is poor despite successful local execution. Other providers remain unbenchmarked.
+
 Research date: **2026-10-03**. Primary sources were read during this pass. This is a capability and procurement study, not a generation benchmark or legal clearance. No model was installed or run, no paid task was submitted, and no customer image was uploaded. Release dates below come from dated official sources; undated live documentation establishes availability observed on the research date, not an October release. Exhaustive October release coverage is **unknown**.
 
 ## Recommendation

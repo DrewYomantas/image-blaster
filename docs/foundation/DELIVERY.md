@@ -1,5 +1,13 @@
 # Foundation delivery evidence
 
+## Current geometry milestone
+
+The subsequent local DA3 Small experiment, starting from `4dce4527ba39f46c130d72a7248fdfd015deadce`, is recorded in [GEOMETRY-BENCHMARK.md](GEOMETRY-BENCHMARK.md), the [worker receipt](DA3-WORKER.md), and the [fixture protocol](../../benchmarks/geometry/README.md). It adds real CPU depth/camera inference, explicit scale calibration, measured-role override and objective synthetic errors. No paid service, GPU worker, client change or import was used.
+
+## Historical initial foundation receipt
+
+All remaining statements below describe the initial foundation pass, before DA3 was installed. Its former next milestone is now the synthetic geometry experiment above. They are retained as baseline evidence, not current claims that no model has run.
+
 Session date: October 3, 2026 (America/Chicago); UTC timestamps extend into October 4. This is a tested foundation, not a delivered photo-to-room model or a client deployment.
 
 ## Repository and environment

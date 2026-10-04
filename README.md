@@ -20,6 +20,8 @@ Requires Node >=24.2. Windows is covered by actual CLI subprocess tests. Local a
 
 Documentation: [engine and scene contract](docs/foundation/ENGINE.md), [upstream audit](docs/foundation/UPSTREAM-AUDIT.md), [current client integration](docs/foundation/CLIENT-INTEGRATION.md), [provider research](docs/foundation/PROVIDER-RESEARCH.md), [two-scene benchmark](docs/foundation/BENCHMARK.md), [delivery evidence](docs/foundation/DELIVERY.md).
 
+The optional [DA3 Small CPU worker](docs/foundation/DA3-WORKER.md) adds `scene-geometry` independently of semantic analysis. The [synthetic four-view room benchmark](benchmarks/geometry/README.md) keeps exact truth separate, measures camera/depth errors, calibrates one scale anchor explicitly, and tests measured evidence precedence. Run `node benchmarks/geometry/run.mjs` after fixture generation and worker installation. Weights, environments, caches and generated evidence stay local and ignored.
+
 The inherited development tools have known audit advisories; consult delivery evidence before exposing a development server. Preserve [LICENSE.md](LICENSE.md) and the upstream copyright notice in copies/distributions. Hosted model licenses and generated-output rights are independent of this MIT source license.
 
 ## Historical upstream README

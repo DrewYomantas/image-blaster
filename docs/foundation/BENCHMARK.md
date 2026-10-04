@@ -1,5 +1,7 @@
 # Two-scene benchmark plan
 
+The first implemented observed-geometry experiment is the separate [synthetic four-view room harness](../../benchmarks/geometry/README.md). Its truth is project-authored, with one explicit post-inference scale anchor. TPS/Benson integration and the client photo benchmarks below remain unrun. The synthetic experiment is not customer-photo or client acceptance.
+
 Prepared October 3, 2026. No paid generation or client import has run. No customer/client image has been copied. Inputs below are specifications awaiting Drew's chosen synthetic or authorized photos. Fixture/unit tests do not count as a reconstruction benchmark.
 
 ## Input A: TPS founding-site reference
