@@ -1,0 +1,243 @@
+{
+  "schemaVersion": 1,
+  "operator": "isolated image-only Codex annotator",
+  "method": "Manual inspection of only the three supplied RGB images at native resolution and nearest-neighbor enlarged in-memory crops. Pixel coordinates use top-left origin, u right, v down. No camera, geometry, dimensions, truth, manifests, model outputs, or scoring inspected. Frozen before any fit scoring.",
+  "revision": 1,
+  "count": 47,
+  "timeSpentSecondsApprox": 180,
+  "assumptions": [
+    "Opening means outer mouth/jamb intersections with the fireplace wall plane, not recessed dark back-panel corners.",
+    "Brown horizontal solid is the mantel; pale gray shape beneath and beside it is treated as cast shadow, not a second solid.",
+    "Gray projecting bottom slab is the hearth. Back means its wall-side edge.",
+    "Only actual visible room-wall intersections are annotated; image boundaries are not room corners."
+  ],
+  "uncertaintyPixels": {
+    "opening": 2,
+    "hearth": 2,
+    "mantel": 3,
+    "room": 2
+  },
+  "views": [
+    {
+      "id": "view01",
+      "points": {
+        "opening.bottomLeft": [
+          256,
+          316
+        ],
+        "opening.bottomRight": [
+          356,
+          301
+        ],
+        "opening.topLeft": [
+          254,
+          205
+        ],
+        "opening.topRight": [
+          355,
+          205
+        ],
+        "hearth.topBackLeft": [
+          205,
+          369
+        ],
+        "hearth.topBackRight": [
+          391,
+          331
+        ],
+        "hearth.topFrontLeft": [
+          216,
+          389
+        ],
+        "hearth.topFrontRight": [
+          416,
+          341
+        ],
+        "hearth.bottomFrontLeft": [
+          217,
+          412
+        ],
+        "hearth.bottomFrontRight": [
+          416,
+          361
+        ],
+        "mantel.bottomFrontLeft": [
+          212,
+          180
+        ],
+        "mantel.bottomFrontRight": [
+          410,
+          185
+        ],
+        "mantel.topFrontLeft": [
+          212,
+          156
+        ],
+        "mantel.topFrontRight": [
+          410,
+          168
+        ],
+        "room.backCeilingRight": [
+          477,
+          103
+        ],
+        "room.backFloorRight": [
+          469,
+          330
+        ]
+      },
+      "notes": "16 points. Right back floor corner is visible immediately left of the green box. Left fireplace-wall room corners are outside the image. No front room corners visible. Mantel back corners omitted because thin side strips and cast shadow do not reliably establish wall-side endpoints. Opening outer right edge is low contrast; allow 2 px uncertainty."
+    },
+    {
+      "id": "view02",
+      "points": {
+        "opening.bottomLeft": [
+          262,
+          315
+        ],
+        "opening.bottomRight": [
+          378,
+          313
+        ],
+        "opening.topLeft": [
+          262,
+          207
+        ],
+        "opening.topRight": [
+          377,
+          208
+        ],
+        "hearth.topBackLeft": [
+          211,
+          357
+        ],
+        "hearth.topBackRight": [
+          426,
+          352
+        ],
+        "hearth.topFrontLeft": [
+          200,
+          372
+        ],
+        "hearth.topFrontRight": [
+          443,
+          367
+        ],
+        "hearth.bottomFrontLeft": [
+          200,
+          397
+        ],
+        "hearth.bottomFrontRight": [
+          443,
+          390
+        ],
+        "mantel.bottomFrontLeft": [
+          207,
+          178
+        ],
+        "mantel.bottomFrontRight": [
+          434,
+          180
+        ],
+        "mantel.topFrontLeft": [
+          207,
+          160
+        ],
+        "mantel.topFrontRight": [
+          434,
+          163
+        ],
+        "room.backCeilingLeft": [
+          31,
+          67
+        ],
+        "room.backCeilingRight": [
+          553,
+          85
+        ]
+      },
+      "notes": "16 points. Both back floor room corners are occluded by the blue and green boxes. Both back ceiling junctions are visible. No front room corners visible. Mantel back corners omitted because underside/back endpoints cannot be reliably separated from shadow."
+    },
+    {
+      "id": "view03",
+      "points": {
+        "opening.bottomLeft": [
+          278,
+          307
+        ],
+        "opening.bottomRight": [
+          396,
+          319
+        ],
+        "opening.topLeft": [
+          276,
+          199
+        ],
+        "opening.topRight": [
+          399,
+          201
+        ],
+        "hearth.topBackLeft": [
+          235,
+          340
+        ],
+        "hearth.topBackRight": [
+          451,
+          376
+        ],
+        "hearth.topFrontLeft": [
+          212,
+          355
+        ],
+        "hearth.topFrontRight": [
+          449,
+          401
+        ],
+        "hearth.bottomFrontLeft": [
+          212,
+          376
+        ],
+        "hearth.bottomFrontRight": [
+          448,
+          425
+        ],
+        "mantel.bottomFrontLeft": [
+          215,
+          175
+        ],
+        "mantel.bottomFrontRight": [
+          455,
+          173
+        ],
+        "mantel.topFrontLeft": [
+          214,
+          157
+        ],
+        "mantel.topFrontRight": [
+          455,
+          150
+        ],
+        "room.backCeilingLeft": [
+          103,
+          79
+        ]
+      },
+      "notes": "15 points. Back left floor corner is occluded by the blue box. Right fireplace-wall room corners are outside the image or obscured. No front room corners visible. Mantel back corners omitted because solid depth endpoints are ambiguous against cast shadow. Hearth right front endpoint is adjacent to a shadow but the slab silhouette is visible."
+    }
+  ],
+  "sourceHashes": [
+    {
+      "sha256": "a81c6b1cb1bfd61c7de5c33c9718e41c9ee46ea0f253a0383c3a2ee0bde9d15d",
+      "file": "view-01.png"
+    },
+    {
+      "sha256": "fbe1621a7796d797d9f5238217d736a56cf92dbc1011973733816740cdd5d222",
+      "file": "view-02.png"
+    },
+    {
+      "sha256": "943592074ef4668623d01989c4d6d1c4c7a01f7935b6b5e17b7aa3bf7fa8ad94",
+      "file": "view-03.png"
+    }
+  ],
+  "frozenAtUtc": "2026-10-04T15:13:47.3960433Z"
+}

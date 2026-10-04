@@ -136,3 +136,11 @@ Tests cover real Windows subprocess entrypoints, schema/reference/provenance fai
 DA3's separate top-level conditioning contract is experiment-only and absent by default; it never reads benchmark truth implicitly. Normalized conditioning mode/matrices/provenance enter generation cache identity. Unsupported providers reject it. Intrinsics-only is a pinned-revision negative control and is not a production camera-solving feature. Evaluation metadata does not invalidate generation.
 
 SceneSpec v1 adds metre scale `supplied-camera`. Oracle cameras are user-specified calibration with user-input provenance, not model achievements, field measurements, manufacturer sources or registered geometry. Conditioned depth remains inferred visual-only evidence; raw conditioned decoder predictions are explicitly non-independent. Existing measured precedence and whole-scene Benson technical export gate remain unchanged. See CAMERA-CONDITIONING-BENCHMARK.md for results and limitations.
+
+## Bounded structural fitting experiment (M5)
+
+`node engine/cli.mjs structure --input <isolated-input-directory> --lane automatic|assisted|ablation --out <saved-result-directory>` uses the existing optional MoGe CPU Python environment for a separate constrained fitting experiment. It does not add a production reconstruction provider. See [protocol](STRUCTURAL-EXPERIMENT-V1.md) and [results and inspection](STRUCTURAL-FITTING-M5.md).
+
+The output contains inferred visible patches, null unsupported parameters, estimated cameras, diagnostic residuals, OBJ and canonical SceneSpec. Width is explicit user input; geometry never becomes authoritative. The fitter caches complete effective image/neural/annotation/constraint/prior/settings/implementation identities, while the derived SceneSpec has a separate projection receipt. Neither evaluator truth nor an unrelated evaluation sidecar enters fitting identity. Technical Benson export remains blocked.
+
+M5 delivered a working prototype, but failed architectural completeness on both synthetic fixtures. Assisted local dimensions were substantially better than direct neural point maps; the same annotations without neural hints performed almost identically. Use a measured parametric workflow for room authoring. No real-photo trial, new model comparison or client integration is authorized by these results.

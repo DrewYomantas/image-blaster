@@ -88,3 +88,5 @@ IMAGE-BLASTER uses a few generation models:
 ### Development
 
 - remove `/app` from the `.claudeignore` file to give Claude the ability to change the React viewer.
+
+The [M5 structural fitting prototype](docs/foundation/STRUCTURAL-FITTING-M5.md) adds an explicit experimental `structure` CLI and local OBJ inspection. It reports uncertainty and unsupported dimensions honestly. Its synthetic results support measured parametric room authoring, not automatic one-width room reconstruction.

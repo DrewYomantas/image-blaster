@@ -1,0 +1,35 @@
+{
+  "reviewer": "independent Codex adversarial reviewer, separate agent",
+  "result": "no remaining actionable defects identified within bounded prototype scope",
+  "scopes": [
+    "truth isolation",
+    "identifiability",
+    "assistance fairness",
+    "heldout coverage",
+    "artifact geometry and overlays",
+    "source and cache provenance",
+    "final implementation diff"
+  ],
+  "resolved": [
+    "constraint source mismatch",
+    "canonical source metadata cache identity",
+    "physically isolated automatic endpoints",
+    "aperture-filling wall omitted",
+    "unsupported dimension-axis zero estimates",
+    "uncertainty visibility",
+    "worker source/hint hash verification"
+  ],
+  "inspection": [
+    "original assisted/ablation OBJ",
+    "original assisted/automatic view4 overlays",
+    "original ablation view1 overlay",
+    "supplemental assisted view4 and ablation view2 overlays"
+  ],
+  "fitterSha256": "0610fe22b14117fbcf48d8ac837baf77657653fe939fe6706706079c0a7bdb7d",
+  "recommendation": 3,
+  "limitations": [
+    "real-photo usefulness unverified",
+    "no independent heldout camera solve",
+    "no room wall/floor geometry"
+  ]
+}

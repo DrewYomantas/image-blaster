@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "operator": "isolated image-only Codex annotator",
+  "method": "Derivative of frozen image-only annotations.json, retaining only opening.bottomLeft and opening.bottomRight without adjustment.",
+  "revision": 1,
+  "count": 6,
+  "timeSpentSecondsApprox": 180,
+  "sourceHashes": [
+    {
+      "sha256": "a81c6b1cb1bfd61c7de5c33c9718e41c9ee46ea0f253a0383c3a2ee0bde9d15d",
+      "file": "view-01.png"
+    },
+    {
+      "sha256": "fbe1621a7796d797d9f5238217d736a56cf92dbc1011973733816740cdd5d222",
+      "file": "view-02.png"
+    },
+    {
+      "sha256": "943592074ef4668623d01989c4d6d1c4c7a01f7935b6b5e17b7aa3bf7fa8ad94",
+      "file": "view-03.png"
+    }
+  ],
+  "uncertaintyPixels": {
+    "opening": 2
+  },
+  "frozenAtUtc": "2026-10-04T15:13:47.3960433Z",
+  "views": [
+    {
+      "id": "view01",
+      "points": {
+        "opening.bottomLeft": [
+          256,
+          316
+        ],
+        "opening.bottomRight": [
+          356,
+          301
+        ]
+      },
+      "notes": "Unchanged bottom mouth endpoints from the frozen full annotation."
+    },
+    {
+      "id": "view02",
+      "points": {
+        "opening.bottomLeft": [
+          262,
+          315
+        ],
+        "opening.bottomRight": [
+          378,
+          313
+        ]
+      },
+      "notes": "Unchanged bottom mouth endpoints from the frozen full annotation."
+    },
+    {
+      "id": "view03",
+      "points": {
+        "opening.bottomLeft": [
+          278,
+          307
+        ],
+        "opening.bottomRight": [
+          396,
+          319
+        ]
+      },
+      "notes": "Unchanged bottom mouth endpoints from the frozen full annotation."
+    }
+  ]
+}
