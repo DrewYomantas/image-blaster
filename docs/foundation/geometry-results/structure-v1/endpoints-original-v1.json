@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "operator": "isolated image-only Codex annotator",
+  "method": "Endpoint-only derivative of independently frozen image-only annotation; no other points permitted.",
+  "revision": 1,
+  "count": 6,
+  "timeSpentSecondsApprox": 300,
+  "assumptions": [
+    "Opening means outer mouth/jamb intersections with the fireplace wall plane, not recessed dark back-panel corners.",
+    "Brown horizontal solid is the mantel; pale gray shape beneath and beside it is treated as cast shadow, not a second solid.",
+    "Gray projecting bottom slab is the hearth. Back means its wall-side edge.",
+    "Only actual visible room-wall intersections are annotated; image boundaries are not room corners."
+  ],
+  "uncertaintyPixels": {
+    "opening": 2,
+    "hearth": 2,
+    "mantel": 3,
+    "room": 2
+  },
+  "views": [
+    {
+      "id": "view01",
+      "points": {
+        "opening.bottomLeft": [
+          244,
+          306
+        ],
+        "opening.bottomRight": [
+          350,
+          289
+        ]
+      }
+    },
+    {
+      "id": "view02",
+      "points": {
+        "opening.bottomLeft": [
+          246,
+          308
+        ],
+        "opening.bottomRight": [
+          371,
+          300
+        ]
+      }
+    },
+    {
+      "id": "view03",
+      "points": {
+        "opening.bottomLeft": [
+          268,
+          297
+        ],
+        "opening.bottomRight": [
+          395,
+          304
+        ]
+      }
+    }
+  ],
+  "sourceHashes": [
+    {
+      "sha256": "a2a6946feb12b3daed1c4b2051f6d402270463dee76c6f0e505116c8408ca8a7",
+      "file": "view-01.png"
+    },
+    {
+      "sha256": "0a322ec9f025870bbc4bdc9062fb48dd38a33437a0ba135570a5d23f80b06848",
+      "file": "view-02.png"
+    },
+    {
+      "sha256": "daa36b9ab1f6ec90107cf922c916c55bbc9bfc189b1333d5399f7c2ca78c75ae",
+      "file": "view-03.png"
+    }
+  ],
+  "frozenAtUtc": "2026-10-04T15:00:00.7271236Z"
+}
