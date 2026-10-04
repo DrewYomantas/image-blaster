@@ -1,0 +1,36 @@
+{
+  "kind": "independent adversarial MoGe milestone review",
+  "date": "2026-10-04",
+  "implementationHead": "cd53d3d3aa3993f92250966820398075bfb1394f",
+  "reviewer": "separate adversarial agent",
+  "result": "no unresolved actionable findings",
+  "independentTests": {
+    "node": 6,
+    "mogeWorker": 14,
+    "targetedEvaluator": 6
+  },
+  "parentFullSuite": {
+    "node": 67,
+    "viewer": 13,
+    "da3Worker": 25,
+    "mogeWorker": 14,
+    "geometry": 22
+  },
+  "reviewed": [
+    "exact official source/checkpoint card and rights",
+    "strict checkpoint loading",
+    "actual installed dependency/native notices",
+    "normalized/pixel intrinsics and signed normal convention",
+    "FOV post-forward semantics and metric inference claims",
+    "NPZ/receipt mode and ordered source/FOV guards",
+    "fixed known-plane eligibility and evaluator fairness",
+    "unchanged DA3 evidence and identity",
+    "real M1/M2 hashes, distinct cache keys and zero-forward replay",
+    "all three actual visual comparisons",
+    "numeric tables and Outcome3 interpretation"
+  ],
+  "repairedFinding": "P2 NPZ conditioning mode/worker receipt provenance mismatch now fails closed; regression checked before final evaluation/verification",
+  "outcome": 3,
+  "limits": "Full suite and real inference are parent-run evidence; reviewer independently inspected outputs and targeted checks, not entire full suite or repeated model inference",
+  "nextMilestoneBoundary": "Oracle planes/labels/poses/object dimensions stay evaluation-only; structural fitting consumes photos/neural hints and explicit permitted calibration only"
+}

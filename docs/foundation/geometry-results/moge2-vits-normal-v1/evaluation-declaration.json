@@ -1,0 +1,56 @@
+{
+  "kind": "synthetic frozen geometry evaluation methods declared before MoGe inference",
+  "version": 1,
+  "geometryTruthSha256": "e7958de3ee28d1bb15049011c24bb7f5755d547456761d66f5573cbf7c7a7bf8",
+  "pointEvaluation": "official direct metric camera point map; (camera_points - oracle_translation) @ oracle_rotation after inference only",
+  "depth": "same frozen depth/labels/ROI/boundary/visible-span and no-tail-trimming rules; original640x480 outputs; official binary mask only",
+  "anchor": "optional original1.20m anchor scale applied to camera points about each fixed oracle camera origin, no camera/ICP/per-view/per-object fit",
+  "crossView": "reuse prior fixed GT-visible correspondence eligibility without changes",
+  "planes": {
+    "version": "known-planes-v1",
+    "membership": "analytic frozen truth ray/box nearest face; same primitive and face throughout fixed 3x3 neighbourhood; image rim excluded",
+    "plane": "signed perpendicular distance to known outward primitive face: mean, RMS, standard deviation; no fitted plane or prediction rejection",
+    "normals": "signed normalized cosine against outward analytic visible face; mean/median angle and fraction <=15 degrees; no absolute cosine",
+    "groups": {
+      "front-wall": [
+        6
+      ],
+      "floor": [
+        1
+      ],
+      "side-walls": [
+        3,
+        4
+      ],
+      "opening-back": [
+        7
+      ],
+      "opening-recess": [
+        7,
+        8
+      ],
+      "hearth": [
+        9
+      ],
+      "mantel": [
+        10
+      ]
+    },
+    "neighbourhood_radius_pixels": 1,
+    "normal_threshold_degrees": 15
+  },
+  "visualScales": {
+    "depth_m": [
+      0,
+      6
+    ],
+    "signed_plane_residual_m": [
+      -0.25,
+      0.25
+    ],
+    "normal": "signed OpenCV camera vector mapped linearly from -1..1 to0..255"
+  },
+  "codeRevision": "74fbce054ebed49800de42d0ad0e83495065719a",
+  "utils3dRevision": "62f09d58509485564e24d5d9f6aac9ee9ebc0c37",
+  "normalSource": "official MoGe dataloader.py depth_map_to_normal_map and signed normal_map_loss; pinned utils3d cross(up,left) points toward camera (-Z on front-facing plane)"
+}
