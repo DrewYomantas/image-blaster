@@ -1,0 +1,38 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { mkdtemp, rm, writeFile, readFile } from "node:fs/promises";
+import { spawnSync } from "node:child_process";
+import os from "node:os";
+import path from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+
+test("engine CLI analyzes, caches, validates, exports and generates OBJ without an agent or credentials", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "image-blaster-cli-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const cli = fileURLToPath(new URL("../engine/cli.mjs", import.meta.url));
+  const image = path.join(root, "tiny.png");
+  const scene = path.join(root, "scene.json");
+  const output = path.join(root, "benson.json");
+  const blocker = path.join(root, "block-network.mjs");
+  await writeFile(image, Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a7ioAAAAASUVORK5CYII=", "base64"));
+  await writeFile(blocker, 'globalThis.fetch = async () => { throw new Error("network disabled by test"); };\n');
+  const env = { ...process.env, FAL_KEY: "", WORLD_LABS_API_KEY: "", IMAGE_BLASTER_ALLOW_PAID: "" };
+  const invoke = (args) => spawnSync(process.execPath, ["--import", pathToFileURL(blocker).href, cli, ...args], { cwd: root, encoding: "utf8", env });
+  const first = invoke(["analyze", "--image", image, "--out", scene]);
+  assert.equal(first.status, 0, first.stderr);
+  assert.equal(JSON.parse(first.stdout).cached, false);
+  assert.equal(JSON.parse(invoke(["analyze", "--image", image, "--out", scene]).stdout).cached, true);
+  const validated = invoke(["validate", "--scene", scene]);
+  assert.equal(validated.status, 0, validated.stderr);
+  assert.equal(JSON.parse(validated.stdout).valid, true);
+  assert.equal(invoke(["export", "--scene", scene, "--target", "benson", "--out", output]).status, 0);
+  assert.equal(JSON.parse(await readFile(output)).installationApproved, false);
+  assert.equal(invoke(["export", "--scene", scene, "--target", "benson", "--purpose", "technical", "--out", output]).status, 1);
+  assert.equal(invoke(["export", "--scene", scene, "--target", "tps", "--out", output]).status, 0);
+  const requestFile = path.join(root, "request.json");
+  await writeFile(requestFile, JSON.stringify({ request: { capability: "object-3d", parameters: { width: 1, height: 2, depth: 3 } } }));
+  const generated = invoke(["generate", "--request", requestFile]);
+  assert.equal(generated.status, 0, generated.stderr);
+  assert.ok((await readFile(JSON.parse(generated.stdout).result.path, "utf8")).includes("v 1 2 3"));
+  assert.equal(invoke(["bad-command"]).status, 1);
+});

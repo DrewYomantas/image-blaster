@@ -5,10 +5,18 @@
     "app"
   ],
   "scripts": {
-    "dev": "bun --cwd=app run dev",
-    "build": "bun --cwd=app run build",
-    "preview": "bun --cwd=app run preview",
-    "test": "bun --cwd=app run test",
-    "typecheck": "bun --cwd=app run typecheck"
+    "dev": "npm run dev --workspace=app",
+    "build": "npm run build --workspace=app",
+    "preview": "npm run preview --workspace=app",
+    "test": "node --test tests/*.test.mjs && npm run test --workspace=app",
+    "typecheck": "npm run typecheck --workspace=app",
+    "engine": "node engine/cli.mjs",
+    "check:syntax": "node scripts/check-syntax.mjs"
+  },
+  "engines": {
+    "node": ">=24.2.0"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1"
   }
 }

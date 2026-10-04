@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { assertPaidSubmission } from "../../../engine/spend.mjs";
 
 let envLoaded = false;
 
@@ -291,6 +292,7 @@ async function updateMetadata(metadataPath, patch) {
 }
 
 export async function submitFalQueue(endpoint, input, options = {}) {
+  assertPaidSubmission(endpoint);
   const {
     metadataPath,
     metadata = {},

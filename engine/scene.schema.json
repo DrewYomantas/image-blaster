@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/DrewYomantas/image-blaster/schemas/scene-v1",
+  "title": "SceneSpec v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "coordinates", "sources", "cameras", "surfaces", "objects", "relationships", "materials", "artifacts", "validations"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "$ref": "#/definitions/id" },
+    "coordinates": { "const": { "units": "meters", "handedness": "right", "up": "Y", "rotation": "XYZ-radians" } },
+    "sources": { "type": "array", "items": { "$ref": "#/definitions/source" } },
+    "cameras": { "type": "array", "items": { "$ref": "#/definitions/entity" } },
+    "surfaces": { "type": "array", "items": { "$ref": "#/definitions/entity" } },
+    "objects": { "type": "array", "items": { "$ref": "#/definitions/entity" } },
+    "relationships": { "type": "array", "items": {
+      "type": "object", "additionalProperties": false, "required": ["from", "to", "relation"],
+      "properties": { "from": { "$ref": "#/definitions/id" }, "to": { "$ref": "#/definitions/id" }, "relation": { "$ref": "#/definitions/fact" } }
+    } },
+    "materials": { "type": "array", "items": {
+      "type": "object", "additionalProperties": false, "required": ["id", "description", "artifactIds"],
+      "properties": { "id": { "$ref": "#/definitions/id" }, "description": { "$ref": "#/definitions/fact" }, "artifactIds": { "$ref": "#/definitions/ids" }, "properties": { "type": "object", "additionalProperties": { "$ref": "#/definitions/facts" } } }
+    } },
+    "artifacts": { "type": "array", "items": { "$ref": "#/definitions/artifact" } },
+    "validations": { "type": "array", "items": {
+      "type": "object", "additionalProperties": false, "required": ["target", "check", "status", "details"],
+      "properties": { "target": { "$ref": "#/definitions/id" }, "check": { "type": "string", "minLength": 1 }, "status": { "enum": ["pass", "fail", "needs-review"] }, "details": { "type": "string" } }
+    } }
+  },
+  "definitions": {
+    "id": { "type": "string", "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$" },
+    "ids": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/definitions/id" } },
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "license": {
+      "type": "object", "additionalProperties": false, "required": ["id", "commercialUse", "attribution"],
+      "properties": { "id": { "type": "string", "minLength": 1 }, "commercialUse": { "enum": ["allowed", "restricted", "unknown"] }, "attribution": { "type": "string" }, "termsUrl": { "type": "string" } }
+    },
+    "source": {
+      "type": "object", "additionalProperties": false, "required": ["id", "kind", "uri", "license"],
+      "properties": { "id": { "$ref": "#/definitions/id" }, "kind": { "enum": ["image", "field-measurement", "manufacturer-document", "user-input", "model", "registered-geometry"] }, "uri": { "type": "string", "minLength": 1 }, "sha256": { "$ref": "#/definitions/hash" }, "license": { "$ref": "#/definitions/license" } },
+      "if": { "properties": { "kind": { "enum": ["image", "registered-geometry"] } } },
+      "then": { "required": ["sha256"] }
+    },
+    "fact": {
+      "type": "object", "additionalProperties": false, "required": ["id", "value", "state", "sourceIds", "confidence"],
+      "properties": { "id": { "$ref": "#/definitions/id" }, "value": {}, "state": { "enum": ["observed", "inferred", "generated", "measured", "manufacturer-specified", "user-specified"] }, "sourceIds": { "allOf": [{ "$ref": "#/definitions/ids" }, { "minItems": 1 }] }, "confidence": { "type": "number", "minimum": 0, "maximum": 1 }, "note": { "type": "string" } }
+    },
+    "facts": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/fact" } },
+    "dimensionFacts": { "type": "array", "minItems": 1, "items": { "allOf": [{ "$ref": "#/definitions/fact" }, { "properties": { "value": { "type": "number", "exclusiveMinimum": 0 } } }] } },
+    "vec3": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "number" } },
+    "transformFacts": { "type": "array", "minItems": 1, "items": { "allOf": [{ "$ref": "#/definitions/fact" }, {
+      "properties": { "value": { "type": "object", "additionalProperties": false, "required": ["translation", "rotation", "scale"], "properties": { "translation": { "$ref": "#/definitions/vec3" }, "rotation": { "$ref": "#/definitions/vec3" }, "scale": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "number", "exclusiveMinimum": 0 } } } } }
+    }] } },
+    "entity": {
+      "type": "object", "additionalProperties": false, "required": ["id", "label", "dimensions"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" }, "label": { "$ref": "#/definitions/fact" },
+        "dimensions": { "type": "object", "additionalProperties": false, "properties": { "width": { "$ref": "#/definitions/dimensionFacts" }, "height": { "$ref": "#/definitions/dimensionFacts" }, "depth": { "$ref": "#/definitions/dimensionFacts" } } },
+        "transform": { "$ref": "#/definitions/transformFacts" },
+        "properties": { "type": "object", "additionalProperties": { "$ref": "#/definitions/facts" } },
+        "materialIds": { "$ref": "#/definitions/ids" },
+        "geometry": {
+          "type": "object", "additionalProperties": false, "required": ["role", "artifactId", "sourceIds"],
+          "properties": { "role": { "enum": ["visual-only", "authoritative"] }, "artifactId": { "$ref": "#/definitions/id" }, "sourceIds": { "allOf": [{ "$ref": "#/definitions/ids" }, { "minItems": 1 }] } }
+        }
+      }
+    },
+    "artifact": {
+      "type": "object", "additionalProperties": false, "required": ["id", "uri", "format", "sha256", "role", "sourceIds", "provider", "parameters", "license"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" }, "uri": { "type": "string", "minLength": 1 }, "format": { "type": "string", "minLength": 1 }, "sha256": { "$ref": "#/definitions/hash" }, "role": { "enum": ["visual-only", "authoritative"] }, "sourceIds": { "allOf": [{ "$ref": "#/definitions/ids" }, { "minItems": 1 }] },
+        "provider": { "type": "object", "additionalProperties": false, "required": ["id", "model", "version"], "properties": { "id": { "type": "string", "minLength": 1 }, "model": { "type": "string", "minLength": 1 }, "version": { "type": "string", "minLength": 1 } } },
+        "parameters": { "type": "object" }, "license": { "$ref": "#/definitions/license" }, "manifestUri": { "type": "string" }
+      }
+    }
+  }
+}

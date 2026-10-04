@@ -115,6 +115,8 @@ async function writeDirectMetadata(metadataPath, patch) {
 }
 
 async function callFalRun(endpoint, input, options) {
+  const { assertPaidSubmission } = await import("../../../engine/spend.mjs");
+  assertPaidSubmission(endpoint);
   const falKey = await requireEnv("FAL_KEY");
   const submittedAt = new Date().toISOString();
 
@@ -285,7 +287,7 @@ async function main() {
   console.log(JSON.stringify(result, null, 2));
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.main) {
   main().catch((error) => {
     console.error(error.message);
     process.exit(1);

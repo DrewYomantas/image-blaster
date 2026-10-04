@@ -173,6 +173,8 @@ async function buildRequest({ world, image, prompt }) {
 }
 
 async function submitWorld(request) {
+  const { assertPaidSubmission } = await import("../../../engine/spend.mjs");
+  assertPaidSubmission(request.model);
   const apiKey = await requireEnv("WORLD_LABS_API_KEY");
   const response = await fetch(`${ENDPOINT}/worlds:generate`, {
     method: "POST",
@@ -278,12 +280,12 @@ export async function generateWorld(options) {
     image,
     prompt,
     regenerate = false,
-    pollIntervalMs = 15000
+    pollIntervalMs = 15000,
+    outputDir = `worlds/${world}/output/world`
   } = options;
 
   if (!world) throw new Error("world is required.");
 
-  const outputDir = `worlds/${world}/output/world`;
   await ensureDir(outputDir);
 
   const existingWorld = regenerate ? undefined : await latestWorldArtifact(outputDir);
@@ -402,7 +404,7 @@ async function main() {
   console.log(JSON.stringify(result, null, 2));
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.main) {
   main().catch((error) => {
     console.error(error.message);
     process.exit(1);

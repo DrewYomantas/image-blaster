@@ -1,0 +1,20 @@
+# Image Blaster provider-neutral foundation
+
+Codex operates the normal Node CLI. It is not the engine. Read README.md and docs/foundation/ENGINE.md before generation; CLIENT-INTEGRATION.md records the audited client boundaries. The MIT upstream license in LICENSE.md must remain intact in distributions.
+
+- Use Node >=24.2 and npm. `npm ci`, `npm test`, `npm run typecheck`, `npm run build` are credential-free. Bun is optional and has not been verified here.
+- Root instructions and engine contracts supersede historical Claude/Cursor orchestration. Do not execute setup hooks, request pasted credentials, auto-launch the viewer, or automatically blast every object/world/audio lane.
+- No paid generation or cloud GPU usage without explicit user approval of provider/model, input rights and a USD ceiling. A prepaid provider balance is not a ceiling. Never set approval flags merely to make a test pass; use mocked network tests.
+- Never inspect `C:\Users\drewy\secrets`, expose credentials, commit `.env` variants, or put credentials into requests, manifests, prompts or scene facts. Configure environment variables outside version control.
+- TPS and Benson repositories are read-only until separately authorized. Do not fetch, stage, modify, launch, commit or publish there during engine work.
+- TPS owns deterministic terrain, geography, parcels, economics, construction, physics and simulation. Engine exports are optional visual/reference assets. VibeUE import belongs in an isolated staging level and requires separate client authorization.
+- Generated visual geometry is never installation truth. Benson field measurements, exact registered product geometry and manufacturer rules override inference. Retain original evidence and fact ownership. Conflicting authority fails closed; user-specified is not field-measured.
+- Record exact provider/model/adapter version, parameters, prompt, hashes, license rights and QA. Hosted mutable aliases have unknown checkpoint revision unless returned by the service.
+- Customer/outbound projection is a separate reviewed step. Engine manifests and exports are internal-only and contain provenance/confidence. Never expose them as customer packets or installation approvals.
+- Preserve one atomic physical instance per object extraction; separate built-in surfaces from movable objects. Identify location when duplicates overlap. Clean plate removal is one explicit operation. Never turn an edited plate into observed original evidence.
+- Inspect existing manifests and upstream hidden request metadata before retry. Unknown/failed submissions require reconciliation; the engine blocks automatic resubmission. Do not remove locks or incomplete entries while a worker may be running.
+- Keep upstream scripts and indexed artifact convention compatible. `scene.json` is upstream viewer placement state; canonical `scene-spec.json` is separate. Do not overwrite one with the other.
+- Perform a deliberate adversarial review during implementation and before completion. For substantial milestones use a separate reviewer. Distinguish tests/builds from provider quality, browser behavior, imports, runtime/performance and user acceptance.
+- Commit/push only when explicitly requested. Review staged files and secrets exclusions before committing; verify branch, account and remotes before pushing. Never merge main without explicit approval.
+
+Available CLI commands: `providers`, `analyze`, `generate`, `validate`, `export`. Photo inference, room/world reconstruction with open models, replacement, optimization, and actual client imports are later milestones, not implied by a successful schema check.

@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-import { runGptImage2Edit } from "./gpt-image-2-edit.mjs";
-import { runNanoBananaEdit } from "./nano-banana-edit.mjs";
 import { loadDotEnv, many, one, parseArgs } from "./fal-queue.mjs";
 import { requestPath } from "./request-metadata.mjs";
 
@@ -19,23 +17,20 @@ export function resolveImageEditProvider(provider) {
 export async function runImageEdit(options) {
   await loadDotEnv();
   const provider = resolveImageEditProvider(options.provider);
-  let summary;
-
-  if (provider === "gpt-image-2") {
-    summary = await runGptImage2Edit({
+  const { runLegacyProvider } = await import("../../../engine/providers.mjs");
+  const summary = provider === "gpt-image-2"
+    ? await runLegacyProvider("fal-gpt-image", "image-edit", {
       ...options,
       metadataPath: options.metadataPath || requestPath(options.outputDir, 0, "image-edit"),
       quality: options.quality || "medium",
       imageSize: options.imageSize || "auto"
-    });
-  } else {
-    summary = await runNanoBananaEdit({
+    })
+    : await runLegacyProvider("fal-nano-banana", "image-edit", {
       ...options,
       metadataPath: options.metadataPath || requestPath(options.outputDir, 0, "image-edit"),
       resolution: options.resolution || "1K",
       aspectRatio: options.aspectRatio || "auto"
     });
-  }
 
   const normalizedSummary = {
     ...summary,
@@ -75,7 +70,7 @@ async function main() {
   console.log(JSON.stringify(summary, null, 2));
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.main) {
   main().catch((error) => {
     console.error(error.message);
     process.exit(1);

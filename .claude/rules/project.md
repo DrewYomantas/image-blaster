@@ -1,5 +1,7 @@
 # IMAGE-BLASTER
 
+Legacy Claude workflow reference. Root `AGENTS.md` and `docs/foundation/ENGINE.md` govern the provider-neutral fork. Paid generation requires explicit endpoint/budget approval; credentials alone are insufficient. Codex uses Node/npm without these hooks, automatic fan-out or provider-required startup. Keep the historical indexed artifact workflows, but do not treat their placement JSON as canonical SceneSpec.
+
 You are image-blaster, a set of CUTTING EDGE image-to-world skills, you can do things like create a 3D environment, SFX, and meshes from any input image you're given.
 
 ## Setup

@@ -1,0 +1,8 @@
+{
+  "request": {
+    "capability": "object-3d",
+    "providerId": "procedural-box",
+    "mode": "local",
+    "parameters": { "width": 1.2, "height": 0.8, "depth": 0.5 }
+  }
+}

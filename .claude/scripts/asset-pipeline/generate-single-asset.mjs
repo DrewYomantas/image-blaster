@@ -6,8 +6,7 @@ import {
   DEFAULT_HUNYUAN_FACE_COUNT,
   DEFAULT_HUNYUAN_GENERATE_TYPE,
   DEFAULT_HUNYUAN_POLYGON_TYPE,
-  HUNYUAN_3D_PROVIDER,
-  runHunyuan3D
+  HUNYUAN_3D_PROVIDER
 } from "./hunyuan-3d.mjs";
 import {
   DEFAULT_MESHY_ANIMATION_ACTION_ID,
@@ -21,8 +20,7 @@ import {
   DEFAULT_MESHY_SYMMETRY_MODE,
   DEFAULT_MESHY_TARGET_POLYCOUNT,
   DEFAULT_MESHY_TOPOLOGY,
-  MESHY_3D_PROVIDER,
-  runMeshy3D
+  MESHY_3D_PROVIDER
 } from "./meshy-3d.mjs";
 import { runImageEdit } from "./image-edit.mjs";
 import {
@@ -132,14 +130,8 @@ function modelRequestPrefix(request, fallbackProvider) {
 }
 
 async function run3DProvider(options) {
-  const { provider } = options;
-  if (provider === HUNYUAN_3D_PROVIDER) {
-    return runHunyuan3D(options);
-  }
-  if (provider === MESHY_3D_PROVIDER) {
-    return runMeshy3D(options);
-  }
-  throw new Error(`Unsupported 3D provider "${provider}".`);
+  const { runLegacyProvider } = await import("../../../engine/providers.mjs");
+  return runLegacyProvider(`fal-${options.provider}`, "object-3d", options);
 }
 
 function nowIso() {
@@ -628,7 +620,7 @@ async function main() {
   console.log(JSON.stringify(result, null, 2));
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.main) {
   main().catch((error) => {
     console.error(error.message);
     process.exit(1);

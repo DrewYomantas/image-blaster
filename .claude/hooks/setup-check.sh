@@ -55,9 +55,9 @@ fi
 
 if [ "$missing_env_key" -eq 1 ]; then
   if [ "$env_file_exists" -eq 0 ]; then
-    echo "   Tell the user: paste the key(s) here after visiting those URLs, and I can create .env from .env.example or add them for you."
+    echo "   Optional paid providers: configure keys locally in .env from .env.example. Never paste keys into agent conversations. Local engine commands need no keys."
   else
-    echo "   Tell the user: paste the missing key(s) here after visiting the URL(s), and I can update .env for you."
+    echo "   Configure missing keys locally only if an explicitly approved paid provider is needed. Never paste keys into agent conversations."
   fi
 fi
 

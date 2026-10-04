@@ -1,3 +1,31 @@
+# Image Blaster: provider-neutral scene foundation
+
+This MIT fork preserves [Neilson's Image Blaster](https://github.com/neilsonnn/image-blaster) and its React/Three.js viewer, indexed artifacts and hosted providers. The new Node engine owns versioned scene evidence, routing, manifests, caching and submission guards. Codex operates ordinary commands; Claude and paid credentials are optional.
+
+```powershell
+npm ci
+npm test
+npm run typecheck
+npm run build
+npm run engine -- providers
+npm run engine -- generate --request examples/box-request.json
+npm run engine -- analyze --image input/room.png --scene-id room --out scene-spec.json
+npm run engine -- validate --scene scene-spec.json
+npm run engine -- export --scene scene-spec.json --target benson --out benson-import.json
+```
+
+Requires Node >=24.2. Windows is covered by actual CLI subprocess tests. Local analysis records source hashes and preserves supplied evidence; it does **not** perform visual recognition/reconstruction. The procedural provider generates a real visual-only OBJ box. No paid service is required for startup, tests, viewer build or these operations. `input/room.png` is supplied by the operator; no private customer imagery ships here.
+
+`npm run dev` starts the original viewer. Keep canonical SceneSpec separate from the viewer's `worlds/<slug>/scene.json` placement format. Exports are internal manifest boundaries, not actual Unreal/Benson importers or customer packets. Generated geometry is never installation truth, and TPS retains deterministic terrain/simulation authority.
+
+Documentation: [engine and scene contract](docs/foundation/ENGINE.md), [upstream audit](docs/foundation/UPSTREAM-AUDIT.md), [current client integration](docs/foundation/CLIENT-INTEGRATION.md), [provider research](docs/foundation/PROVIDER-RESEARCH.md), [two-scene benchmark](docs/foundation/BENCHMARK.md), [delivery evidence](docs/foundation/DELIVERY.md).
+
+The inherited development tools have known audit advisories; consult delivery evidence before exposing a development server. Preserve [LICENSE.md](LICENSE.md) and the upstream copyright notice in copies/distributions. Hosted model licenses and generated-output rights are independent of this MIT source license.
+
+## Historical upstream README
+
+The following documents original behavior and claims. Claude onboarding and automatic paid blasts are superseded by root AGENTS.md, the Node CLI and explicit spend policy. Do not paste keys into agent conversations.
+
 <img width="960" height="540" alt="image-blaster-1" src="https://github.com/user-attachments/assets/d294e420-eb48-4f00-b6a8-13005442d1a8" />
 
 ## `image-blaster`
