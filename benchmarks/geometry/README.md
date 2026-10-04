@@ -72,3 +72,15 @@ node benchmarks/geometry/camera-run.mjs
 Runner uses canonical existing truth and original local A NPZ identified by the committed receipt; retain those ignored artifacts for replay. It verifies four regenerated hashes, original A numbers/hash, predeclared conditioning hashes and all cache hits. Explicit worker receipts distinguish native supplied-camera scale from the original fixed-anchor evaluation. Supplemental v2 adds per-entity scatter and correct planarity/unit labeling; initial v1 inference receipts and NPZs remain unchanged. Do not apply original evaluator to conditioned tensors without their worker receipt.
 
 Depth/labels/dimensions/anchors never enter the provider. B is a negative control; C is an oracle upper bound; D is the frozen perturbation set in conditioning-declaration.json. See ../../docs/foundation/CAMERA-CONDITIONING-BENCHMARK.md for numerical tables, scientific figures, runtime, cache, licensing and Outcome2. The visible-span/per-entity supplements preserve old core rules and never fill geometry.
+
+## MoGe-2 frozen comparison
+
+`moge2-vits-normal` is a separate optional local/free monocular provider. Read `docs/foundation/MOGE2-WORKER.md` for reviewed exact source/checkpoint pins and isolated CPU setup. Node tests need no Python or weights. Existing DA3 receipts and arrays remain immutable.
+
+Regenerate into `.image-blaster/benchmark/moge2-vits-normal-v1/frozen-fixture` and compare all four hashes before inference. The pre-inference plane/normal declaration lives under `docs/foundation/geometry-results/moge2-vits-normal-v1/evaluation-declaration.json`; its recorded hash binds the request package. Run `node benchmarks/geometry/moge-run.mjs` only after the separate worker environment is installed and that declaration exists.
+
+M1 receives RGB only. M2 receives RGB plus an explicit experiment-oracle horizontal-FOV structure derived from original K. Neither receives truth extrinsics, depth, labels, dimensions or the opening anchor. Oracle E transforms official metric camera point maps after inference in `evaluate_moge.py`. Native metric output is primary; the optional `ANCHOR-ALIGNED` derivative applies the original one-opening-width anchor about each fixed oracle camera origin. No camera, plane, view or object fitting occurs.
+
+Plane membership and normal eligibility use the frozen analytic primitive face with a fixed one-pixel GT neighbourhood exclusion. Signed known-plane RMS/scatter and signed outward normal angles use every eligible valid model sample. No output-driven rejection is allowed. The original depth/boundary/bounds/correspondence helpers are reused. MoGe returns640x480 while DA3 returns252x196: one-pixel boundary tolerance and sample-weighted statistics have different physical sampling, so they are not a strict equal-grid model comparison. Visibility and missingness remain explicit.
+
+Full local tensors and visual evidence remain ignored; the committed numeric receipt and `MOGE2-BENCHMARK.md` document the decision. No mesh, client import, camera solver, authoritative geometry or installation claim follows from this synthetic upper bound.

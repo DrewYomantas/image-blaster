@@ -20,6 +20,7 @@ operator / CLI
 | --- | --- | --- |
 | `local-evidence` | local/free | Hashes and stages explicit source images; validates/preserves supplied SceneSpec. No semantic image understanding or reconstruction |
 | `da3-small` | local/free | Optional isolated Python CPU worker; inferred relative multi-view depth/cameras, NPZ tensors and receipts. No semantics, metric truth, meshes or installation approval |
+| `moge2-vits-normal` | local/free | Optional isolated MoGe-2 CPU worker; independent monocular metric points/depth, inferred FOV, mask and signed normals. No camera poses; metric values remain visual-only inference |
 | `procedural-box` | local/free | Deterministic eight-vertex/twelve-triangle OBJ at explicit metre dimensions; visual-only, no textures or collision approval |
 | `fal-hunyuan` | paid-api/metered | Existing Hunyuan v3 FAL object implementation |
 | `fal-meshy` | paid-api/metered | Existing Meshy v6 FAL object implementation |

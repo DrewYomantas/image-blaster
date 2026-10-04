@@ -23,7 +23,7 @@ async function setup(t) {
 
 test("registry includes separate semantic and geometric boundaries, retained hosted providers and local procedures", () => {
   const registry = createRegistry();
-  assert.equal(registry.list().length, 9);
+  assert.equal(registry.list().length, 10);
   assert.equal(registry.resolve({ capability: "scene-geometry" }).id, "da3-small");
   assert.equal(registry.resolve({ capability: "scene-analysis", mode: "auto" }).id, "local-evidence");
   assert.equal(registry.resolve({ capability: "object-3d", mode: "auto" }).id, "procedural-box");

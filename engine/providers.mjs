@@ -3,6 +3,7 @@ import path from "node:path";
 import { assertScene, emptyScene } from "./scene.mjs";
 import { fileDigest } from "./cache.mjs";
 import { createDA3Provider } from "./da3.mjs";
+import { createMoGe2Provider } from "./moge2.mjs";
 
 export const capabilities = ["scene-analysis", "scene-geometry", "image-edit", "object-3d", "world-reconstruction", "material", "audio", "decision"];
 export const unknownLicense = { id: "UNKNOWN", commercialUse: "unknown", attribution: "" };
@@ -65,6 +66,7 @@ export function normalizeParameters(provider, parameters = {}) {
 export function createRegistry(runtimes = {}) {
   const registry = new ProviderRegistry();
   registry.register(createDA3Provider());
+  registry.register(createMoGe2Provider());
   registry.register({
     id: "local-evidence", capability: "scene-analysis", mode: "local", billing: "free", model: "evidence-envelope", version: "1", implementationFiles: [new URL(import.meta.url)], defaults: { sceneId: "scene" }, extra: [], license: { id: "MIT", commercialUse: "allowed", attribution: "Image Blaster contributors" },
     async generate(request) {
