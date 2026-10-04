@@ -8,6 +8,7 @@ import { assertScene } from "./scene.mjs";
 import { exportBenson, exportTPS } from "./adapters.mjs";
 
 const usage = `Usage: npm run engine -- <command>
+  structure --input <isolated-input-dir> --lane automatic|assisted|ablation --out <result-dir>
   providers
   analyze --image <local-path> [--image <other-path>] --scene-id <slug> --out <scene.json> [--evidence <scene.json>]
   generate --request <request.json> [--cache-dir <directory>]
@@ -28,6 +29,11 @@ export async function main(argv = process.argv.slice(2)) {
   const { flags, positionals } = parseArgs(argv);
   const command = positionals[0];
   if (!command || command === "help" || flags.help) { console.log(usage); return; }
+  if (command === "structure") {
+    const { runStructuralFit } = await import('./structure.mjs');
+    console.log(JSON.stringify(await runStructuralFit({ input: one(flags, 'input'), output: one(flags, 'out'), lane: one(flags, 'lane', 'assisted'), annotations: one(flags, 'annotations'), ...(one(flags, 'python') ? { python: one(flags, 'python') } : {}) }), null, 2));
+    return;
+  }
   if (command === "providers") { console.log(JSON.stringify(createRegistry().list(), null, 2)); return; }
   if (command === "analyze") {
     const images = many(flags, "image");
