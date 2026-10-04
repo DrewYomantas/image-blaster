@@ -135,6 +135,122 @@ def dimensions_metrics(cloud, truth_cloud, labels, valid, metadata):
     return result
 
 
+def held_out_dimensions(cloud, truth_cloud, labels, valid, metadata):
+    result = dimensions_metrics(cloud, truth_cloud, labels, valid, metadata)
+    for item in result:
+        truth_count = int(np.isin(labels, next(d["labels"] for d in metadata["dimensions"] if d["id"] == item["id"])).sum())
+        item["predicted_valid_fraction_of_visible_samples"] = item["samples"] / truth_count if truth_count else 0.
+        for axis in item["axes"]:
+            excluded = item["id"].startswith("opening-") and axis["axis"] == "width"
+            value, visible = axis["aligned_observed_extent_m"], axis["truth_visible_extent_m"]
+            planar = axis["truth_m"] == 0
+            target = 0. if planar else axis["truth_m"] if axis["complete_axis_observed"] else visible
+            axis["observed_extent_m"] = value
+            axis["independent_accuracy_claim"] = not excluded and value is not None and target is not None and target > 0
+            axis["calibration_dimension_excluded"] = excluded
+            axis["planarity_diagnostic"] = planar
+            axis["evaluation_target"] = "planarity diagnostic; zero authored extent" if planar else "authored full dimension" if axis["complete_axis_observed"] else "visible truth span only; hidden extent unverified"
+            axis["held_out_target_m"] = target
+            axis["held_out_absolute_error_cm"] = None if excluded or value is None or target is None else abs(value - target) * 100
+            axis["held_out_relative_error_percent"] = None if excluded or value is None or not target else abs(value - target) / target * 100
+    return result
+
+
+def project_coordinates(cloud, intrinsics, extrinsics):
+    local = cloud @ extrinsics[:, :3].T + extrinsics[:, 3]
+    projected = local @ intrinsics.T
+    coordinates = np.full(projected.shape[:-1] + (2,), np.nan)
+    positive = np.isfinite(projected).all(-1) & (local[..., 2] > 0)
+    coordinates[positive] = projected[positive, :2] / projected[positive, 2:]
+    return coordinates, local[..., 2]
+
+
+def cross_view_metrics(cloud, truth_cloud, truth_depths, labels, valid, truth_intrinsics, truth_extrinsics, dimension_items=None):
+    count, height, width = truth_depths.shape
+    pairs, reprojections, scatters = [], [], []
+    groups = dimension_items if dimension_items is not None else [dict(id=str(label), labels=[int(label)]) for label in np.unique(labels)]
+    entity_totals = {item["id"]: dict(labels=item["labels"], truth_count=0, valid_count=0, projection_count=0,
+                                    nonprojectable_count=0, reprojection_squared=0., scatter_squared=0.) for item in groups}
+    for target in range(count):
+        source = (target + 1) % count
+        coordinates, target_z = project_coordinates(truth_cloud[source], truth_intrinsics[target], truth_extrinsics[target])
+        inside = np.isfinite(coordinates).all(-1) & (coordinates[..., 0] >= 0) & (coordinates[..., 0] < width - 1) & (coordinates[..., 1] >= 0) & (coordinates[..., 1] < height - 1)
+        yy, xx = np.nonzero(inside)
+        xy = coordinates[yy, xx]
+        left, top = xy.astype(int).T
+        dx, dy = (xy - np.column_stack([left, top])).T
+        weights = np.column_stack([(1-dx)*(1-dy), dx*(1-dy), (1-dx)*dy, dx*dy])
+        tx = np.column_stack([left, left + 1, left, left + 1])
+        ty = np.column_stack([top, top, top + 1, top + 1])
+        samples = truth_depths[target][ty, tx]
+        target_truth_depth = np.sum(samples * weights, axis=1)
+        target_labels = labels[target][ty, tx]
+        visible = (np.abs(target_truth_depth - target_z[yy, xx]) <= .02) & (np.ptp(samples, axis=1) <= .05) & (target_labels == labels[source][yy, xx, None]).all(1)
+        yy, xx, xy, weights, tx, ty = [array[visible] for array in (yy, xx, xy, weights, tx, ty)]
+        available = valid[source][yy, xx] & valid[target][ty, tx].all(1)
+        predicted_xy, _ = project_coordinates(cloud[source][yy, xx], truth_intrinsics[target], truth_extrinsics[target])
+        projection_valid = available & np.isfinite(predicted_xy).all(1)
+        reprojection = np.linalg.norm(predicted_xy[projection_valid] - xy[projection_valid], axis=1)
+        target_points = np.sum(cloud[target][ty[available], tx[available]] * weights[available, :, None], axis=1)
+        difference = cloud[source][yy[available], xx[available]] - target_points
+        scatter = np.linalg.norm(difference, axis=1)
+        mean_offset = difference.mean(0) if len(difference) else None
+        pairs.append(dict(source_view=source, target_view=target, truth_visible_correspondences=len(yy), valid_prediction_correspondences=int(available.sum()),
+                          prediction_coverage=float(available.mean()) if len(available) else 0., nonprojectable_prediction_correspondences=int((available & ~projection_valid).sum()),
+                          reprojection_rmse_pixels=float(np.sqrt(np.mean(reprojection ** 2))) if len(reprojection) else None,
+                          duplicate_surface_scatter_rmse_cm=float(np.sqrt(np.mean(scatter ** 2)) * 100) if len(scatter) else None,
+                          relative_view_offset_cm=None if mean_offset is None else (mean_offset * 100).tolist(),
+                          relative_view_residual_scatter_rmse_cm=float(np.sqrt(np.mean(np.sum((difference - mean_offset) ** 2, axis=1))) * 100) if len(difference) else None))
+        source_labels = labels[source][yy, xx]
+        for entity in entity_totals.values():
+            selected = np.isin(source_labels, entity["labels"])
+            entity["truth_count"] += int(selected.sum())
+            entity["valid_count"] += int((selected & available).sum())
+            entity["projection_count"] += int((selected & projection_valid).sum())
+            entity["nonprojectable_count"] += int((selected & available & ~projection_valid).sum())
+            entity["reprojection_squared"] += float(np.sum(reprojection[selected[projection_valid]] ** 2))
+            entity["scatter_squared"] += float(np.sum(scatter[selected[available]] ** 2))
+        reprojections.extend(reprojection)
+        scatters.extend(scatter)
+    entity_metrics = {}
+    for name, entity in entity_totals.items():
+        entity_metrics[name] = dict(labels=entity["labels"], truth_visible_correspondences=entity["truth_count"],
+                                    valid_prediction_correspondences=entity["valid_count"], nonprojectable_prediction_correspondences=entity["nonprojectable_count"],
+                                    prediction_coverage=entity["valid_count"] / entity["truth_count"] if entity["truth_count"] else 0.,
+                                    reprojection_rmse_pixels=float(np.sqrt(entity["reprojection_squared"] / entity["projection_count"])) if entity["projection_count"] else None,
+                                    duplicate_surface_scatter_rmse_cm=float(np.sqrt(entity["scatter_squared"] / entity["valid_count"]) * 100) if entity["valid_count"] else None)
+    total = sum(pair["truth_visible_correspondences"] for pair in pairs)
+    usable = sum(pair["valid_prediction_correspondences"] for pair in pairs)
+    return dict(entities=entity_metrics, method="fixed adjacent source-to-target pairs; GT-only bounds, 2cm visibility tolerance, same labels in target bilinear footprint and <=5cm truth depth footprint span; no prediction quality cutoff or missing filling; predicted points projected into fixed truth target camera", pairs=pairs,
+                truth_visible_correspondences=total, valid_prediction_correspondences=usable, prediction_coverage=usable / total if total else 0.,
+                nonprojectable_prediction_correspondences=sum(pair["nonprojectable_prediction_correspondences"] for pair in pairs),
+                reprojection_rmse_pixels=float(np.sqrt(np.mean(np.square(reprojections)))) if len(reprojections) else None,
+                duplicate_surface_scatter_rmse_cm=float(np.sqrt(np.mean(np.square(scatters))) * 100) if len(scatters) else None)
+
+
+def conditioning_metadata(receipt, data, prediction):
+    if receipt is None:
+        if data.get("conditioning_mode") not in (None, "none"):
+            raise ValueError("conditioned prediction requires explicit worker receipt")
+        return dict(mode="none", depthScaleSource="nowhere", provenance="inferred-camera", cameraPredictionIndependent=True)
+    payload = json.loads(Path(receipt).read_text(encoding="utf-8-sig"))
+    if payload.get("artifactSha256") != hashlib.sha256(Path(prediction).read_bytes()).hexdigest():
+        raise ValueError("worker receipt prediction artifact hash mismatch")
+    conditioning = payload.get("conditioning", dict(mode="none", depthScaleSource="nowhere"))
+    if conditioning.get("mode") not in ("none", "intrinsics-only", "pose"):
+        raise ValueError("invalid receipt conditioning mode")
+    if data.get("conditioning_mode") not in (None, conditioning["mode"]):
+        raise ValueError("worker receipt conditioning mode differs from prediction")
+    if conditioning["mode"] == "pose":
+        if conditioning.get("provenance") != "experiment-oracle" or conditioning.get("cameraPredictionIndependent") is not False:
+            raise ValueError("conditioned evaluation requires explicit oracle provenance")
+        if payload.get("coordinates", {}).get("units") != "meters":
+            raise ValueError("native conditioned evaluation requires metre camera coordinates")
+        if not np.allclose(conditioning.get("processedIntrinsics"), data["intrinsics"], atol=1e-4):
+            raise ValueError("conditioned processed intrinsics differ from output cameras")
+    return conditioning
+
+
 def project_image(cloud, colors, intrinsics, extrinsics, width, height):
     local = cloud @ extrinsics[:, :3].T + extrinsics[:, 3]
     projected = local @ intrinsics.T
@@ -156,6 +272,11 @@ def load_prediction(path):
             raise ValueError("prediction NPZ requires depths, confidences, intrinsics, extrinsics")
         data = {key: np.asarray(archive[key], dtype=float) for key in required}
         data["processed_images"] = np.array(archive["processed_images"]) if "processed_images" in archive else None
+        if "conditioning_mode" in archive:
+            mode = np.asarray(archive["conditioning_mode"])
+            if mode.shape != () or str(mode) not in ("none", "intrinsics-only", "pose"):
+                raise ValueError("invalid prediction conditioning mode")
+            data["conditioning_mode"] = str(mode)
     depth = data["depths"]
     if depth.ndim != 3 or depth.shape[0] != 4 or min(depth.shape[1:]) < 14:
         raise ValueError("fixture requires four depth maps, each at least 14x14")
@@ -176,7 +297,7 @@ def load_prediction(path):
     return data
 
 
-def evaluate(fixture, prediction, output):
+def evaluate(fixture, prediction, output, worker_receipt=None):
     fixture, output = Path(fixture), Path(output)
     output.mkdir(parents=True, exist_ok=True)
     metadata = json.loads((fixture / "ground-truth/geometry.json").read_text())
@@ -185,6 +306,8 @@ def evaluate(fixture, prediction, output):
         if digest != item["sha256"]:
             raise ValueError("fixture input hash mismatch")
     data = load_prediction(prediction)
+    conditioning = conditioning_metadata(worker_receipt, data, prediction)
+    pose_conditioned = conditioning["mode"] == "pose"
     depths, intrinsics, extrinsics = (data[key] for key in ["depths", "intrinsics", "extrinsics"])
     count, height, width = depths.shape
     sx, sy = width / metadata["resolution"][0], height / metadata["resolution"][1]
@@ -231,10 +354,31 @@ def evaluate(fixture, prediction, output):
                   focal=dict(truth_pixels=focal_truth.tolist(), inferred_pixels=focal_inference.tolist(), absolute_error_pixels=np.abs(focal_inference - focal_truth).tolist(), error_percent=(np.abs(focal_inference - focal_truth) / focal_truth * 100).tolist()),
                   dimensions=dimensions_metrics(aligned_cloud, truth_cloud, labels, valid, metadata),
                   unverified=["real photography", "semantic segmentation by provider", "hidden-surface completion", "mesh topology", "materials", "client import", "installation truth"])
+    report["conditioning"] = conditioning
+    report["scale_sources"] = dict(INFERENCE="DA3 supplied-camera path" if pose_conditioned else "nowhere", ALIGNED="both DA3 supplied-camera path and existing 1.20m benchmark anchor" if pose_conditioned else "existing 1.20m post-inference benchmark anchor")
+    report["held_out_dimensions"] = dict(ALIGNED=held_out_dimensions(aligned_cloud, truth_cloud, labels, valid, metadata))
+    report["cross_view"] = dict(ALIGNED=cross_view_metrics(aligned_cloud, truth_cloud, truth_depths, labels, valid, truth_intrinsics, truth_extrinsics, metadata["dimensions"]))
+    if conditioning["mode"] == "intrinsics-only":
+        report["kind"] = "synthetic intrinsics-only experimental control; supplied oracle calibration, no backbone pose conditioning"
+    if pose_conditioned:
+        report["kind"] = "synthetic camera-conditioning experiment; explicit oracle cameras supplied, depth inferred"
+        report["inference_frame"] = "provider-native metres in supplied scene-y-up camera frame; raw decoder arrays retained in prediction NPZ"
+        report["depth"]["NATIVE"] = depth_metrics(depths, truth_depths, valid)
+        report["boundaries"]["fireplace_opening_NATIVE"] = boundary_metrics(depths, truth_depths, valid, opening_roi)
+        report["held_out_dimensions"]["NATIVE"] = held_out_dimensions(cloud, truth_cloud, labels, valid, metadata)
+        report["cross_view"]["NATIVE"] = cross_view_metrics(cloud, truth_cloud, truth_depths, labels, valid, truth_intrinsics, truth_extrinsics, metadata["dimensions"])
+        report["scale_sources"]["NATIVE"] = "DA3 supplied-camera path; no benchmark anchor or rigid fit"
+        report["native_alignment"] = "none: supplied camera frame and official DA3 metric scale retained; no rigid fit of perturbed cameras"
+        report["cameras"]["independent_model_accuracy"] = False
+        report["cameras"]["interpretation"] = "camera outputs are supplied oracle/test input, not independently reconstructed model achievements"
+        report["depth"]["INFERENCE"]["rmse_m"] = report["depth"]["INFERENCE"].pop("gauge_dependent_numeric_rmse_vs_metre_truth")
+        report["focal"]["interpretation"] = "output intrinsics are supplied processed oracle calibration, not independently inferred focal accuracy"
+        report["depth"]["INFERENCE"]["interpretation"] = "provider-native metric conditioned inference; use NATIVE for metre accuracy"
+        report["processed_intrinsics_against_frozen_truth"] = dict(processed=intrinsics.tolist(), frozen_evaluation=truth_intrinsics.tolist(), difference=(intrinsics-truth_intrinsics).tolist(), interpretation="frozen evaluator retains pixel-centre resize; official supplied-K processing can differ in principal point; neither path is silently adjusted")
     for item in report["dimensions"]:
         for axis in item["axes"]:
             value = axis["aligned_observed_extent_m"]
-            axis["original_oriented_extent_relative_units"] = None if value is None else value / scale
+            axis["original_oriented_extent_meters" if pose_conditioned else "original_oriented_extent_relative_units"] = None if value is None else value / scale
     (output / "report.json").write_text(json.dumps(report, indent=2, allow_nan=False) + "\n")
     np.savez_compressed(output / "aligned.npz", points=aligned_cloud.astype(np.float32), depths=(depths * scale).astype(np.float32), valid=valid, rotation=rotation, translation=translation, scale=scale)
     rgb = data["processed_images"]
@@ -248,9 +392,13 @@ def evaluate(fixture, prediction, output):
         png(output / f"GT-depth-{index + 1:02}.png", depth_image(truth_depths[index]), f"SYNTHETIC GT DEPTH {index + 1:02}")
         png(output / f"INFERENCE-depth-{index + 1:02}.png", depth_image(depths[index]), f"SYNTHETIC INFERENCE DEPTH {index + 1:02}")
         png(output / f"ALIGNED-depth-{index + 1:02}.png", depth_image(depths[index] * scale), f"SYNTHETIC ALIGNED DEPTH {index + 1:02}")
+        if pose_conditioned:
+            png(output / f"NATIVE-depth-{index + 1:02}.png", depth_image(depths[index]), f"SYNTHETIC NATIVE DEPTH {index + 1:02}")
         # Source view differs from the target, exposing camera/depth consistency.
         source = (index + 1) % count
         selected = valid[source]
+        if pose_conditioned:
+            png(output / f"NATIVE-cross-view-{source + 1:02}-to-{index + 1:02}.png", project_image(cloud[source][selected], rgb[source][selected], truth_intrinsics[index], truth_extrinsics[index], width, height), f"SYNTHETIC NATIVE VIEW {source + 1:02} TO {index + 1:02}")
         png(output / f"ALIGNED-cross-view-{source + 1:02}-to-{index + 1:02}.png", project_image(aligned_cloud[source][selected], rgb[source][selected], truth_intrinsics[index], truth_extrinsics[index], width, height), f"SYNTHETIC ALIGNED VIEW {source + 1:02} TO {index + 1:02}")
     return report
 
@@ -260,6 +408,7 @@ if __name__ == "__main__":
     parser.add_argument("--fixture", default=".image-blaster/benchmark/synthetic-room-v1")
     parser.add_argument("--prediction", required=True)
     parser.add_argument("--out", required=True)
+    parser.add_argument("--worker-receipt", help="explicit worker result required to interpret supplied-camera metric outputs")
     arguments = parser.parse_args()
-    report = evaluate(arguments.fixture, arguments.prediction, arguments.out)
+    report = evaluate(arguments.fixture, arguments.prediction, arguments.out, arguments.worker_receipt)
     print(json.dumps(dict(scale_anchor=report["scale_anchor"], depth=report["depth"], output=str(Path(arguments.out).resolve())), indent=2))

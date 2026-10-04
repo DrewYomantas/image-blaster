@@ -83,8 +83,8 @@
     } } }] } },
     "poseFacts": { "type": "array", "minItems": 1, "items": { "allOf": [{ "$ref": "#/definitions/fact" }, { "properties": { "value": {
       "type": "object", "additionalProperties": false, "required": ["worldToCamera", "coordinateFrame", "units", "scale"],
-      "properties": { "worldToCamera": { "$ref": "#/definitions/matrix34" }, "coordinateFrame": { "enum": ["opencv-model-world", "scene-y-up"] }, "units": { "enum": ["relative", "meters"] }, "scale": { "enum": ["ambiguous", "anchored"] } },
-      "allOf": [{ "if": { "properties": { "units": { "const": "relative" } } }, "then": { "properties": { "scale": { "const": "ambiguous" } } }, "else": { "properties": { "scale": { "const": "anchored" }, "coordinateFrame": { "const": "scene-y-up" } } } }]
+      "properties": { "worldToCamera": { "$ref": "#/definitions/matrix34" }, "coordinateFrame": { "enum": ["opencv-model-world", "scene-y-up"] }, "units": { "enum": ["relative", "meters"] }, "scale": { "enum": ["ambiguous", "anchored", "supplied-camera"] } },
+      "allOf": [{ "if": { "properties": { "units": { "const": "relative" } } }, "then": { "properties": { "scale": { "const": "ambiguous" } } }, "else": { "properties": { "scale": { "enum": ["anchored", "supplied-camera"] }, "coordinateFrame": { "const": "scene-y-up" } } } }]
     } } }] } }
   }
 }

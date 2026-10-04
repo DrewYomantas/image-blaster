@@ -1,8 +1,9 @@
+import { normalizeConditioning } from "./conditioning.mjs";
 import { spawn } from "node:child_process";
 import { writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
-import { canonicalJSON, fileDigest, verifiedInside } from "./cache.mjs";
+import { canonicalJSON, fileDigest, requestKey, verifiedInside } from "./cache.mjs";
 import { assertScene, emptyScene } from "./scene.mjs";
 
 const worker = new URL("../workers/da3/worker.py", import.meta.url);
@@ -27,12 +28,13 @@ export function createDA3Provider({ invoke = invokeDA3, implementationFiles = [n
   return {
     id: "da3-small", capability: "scene-geometry", mode: "local", billing: "free", model: "depth-anything/DA3-SMALL", version: "1",
     implementationFiles, implementationConfig: { ...implementationConfig, ...(invoke !== invokeDA3 ? { injectedWorker: invoke.toString() } : {}) }, license: da3License, defaults: { sceneId: "geometry-scene", processResolution: 256, threads: 6, profileWarmInference: false }, extra: [],
+    normalizeConditioning,
     identity: () => invoke(["--identity"]),
     async generate(request) {
       if (request.inputs.length < 2 || request.prompt) throw new Error("DA3 geometry requires overlapping local images and accepts no semantic prompt or ground-truth hints.");
       if (![256, 384].includes(request.parameters.processResolution) || !Number.isInteger(request.parameters.threads) || request.parameters.threads < 1 || request.parameters.threads > 64) throw new Error("DA3 requires resolution 256|384 and integer threads 1..64.");
       const requestPath = path.join(request.outputDir, "worker-request.json");
-      await writeFile(requestPath, `${JSON.stringify({ inputs: request.inputs.map(({ path }) => ({ path })), outputDir: path.join(request.outputDir, "inference"), parameters: { processResolution: request.parameters.processResolution, threads: request.parameters.threads, profileWarmInference: request.parameters.profileWarmInference }, expectedIdentity: request.identity.checkpoint }, null, 2)}\n`);
+      await writeFile(requestPath, `${JSON.stringify({ inputs: request.inputs.map(({ path }) => ({ path })), outputDir: path.join(request.outputDir, "inference"), parameters: { processResolution: request.parameters.processResolution, threads: request.parameters.threads, profileWarmInference: request.parameters.profileWarmInference }, ...(request.conditioning ? { conditioning: request.conditioning } : {}), expectedIdentity: request.identity.checkpoint }, null, 2)}\n`);
       const response = await invoke(["--request", requestPath]);
       if (canonicalJSON(response.identity) !== canonicalJSON(request.identity.checkpoint)) throw new Error("DA3 checkpoint/implementation changed between identity check and inference.");
       const scene = request.scene ? structuredClone(request.scene) : emptyScene(request.parameters.sceneId);
@@ -46,13 +48,24 @@ export function createDA3Provider({ invoke = invokeDA3, implementationFiles = [n
       });
       const modelId = `${prefix}-model`;
       scene.sources.push({ id: modelId, kind: "model", uri: `https://huggingface.co/depth-anything/DA3-SMALL/tree/${response.identity.modelRevision}`, sha256: response.identity.checkpointSha256, license: da3License });
-      const fact = (id, value, sources = [...sourceIds, modelId]) => ({ id: `${prefix}-${id}`, value, state: "inferred", sourceIds: sources, confidence: 0, note: "Uncalibrated model evidence; confidence not calibrated and geometry is not metric or installation truth." });
+      const conditioning = request.conditioning;
+      const poseConditioned = conditioning?.mode === "pose";
+      const oracleId = `${prefix}-experiment-oracle-cameras`;
+      if (conditioning) {
+        if (response.conditioning?.mode !== conditioning.mode || response.conditioning?.provenance !== "experiment-oracle") throw new Error("Worker omitted explicit oracle conditioning provenance.");
+        scene.sources.push({ id: oracleId, kind: "user-input", uri: "experiment://explicit-oracle-camera-conditioning", sha256: requestKey(conditioning), license: { id: "MIT", commercialUse: "allowed", attribution: "Experiment camera input, not a field measurement or manufacturer source" } });
+      }
+      const frame = poseConditioned ? { coordinateFrame: "scene-y-up", units: "meters", scale: "supplied-camera" } : { coordinateFrame: "opencv-model-world", units: "relative", scale: "ambiguous" };
+      const supplied = (id, value) => ({ id: `${prefix}-${id}`, value, state: "user-specified", sourceIds: [oracleId], confidence: 1, note: "Experiment oracle camera input. Supplied calibration, not independent model reconstruction or field measurement." });
+      const fact = (id, value, sources = [...sourceIds, modelId, ...(conditioning ? [oracleId] : [])]) => ({ id: `${prefix}-${id}`, value, state: "inferred", sourceIds: sources, confidence: 0, note: "Model inference; confidence not calibrated. Any supplied-camera scale is experiment input and geometry is never installation truth." });
       for (const [index, camera] of response.cameras.entries()) {
         if (camera.sourceIndex !== index || index >= sourceIds.length) throw new Error("DA3 camera/image correspondence is invalid.");
-        scene.cameras.push({ id: `${prefix}-camera-${index}`, label: fact(`camera-${index}-label`, `Inferred camera ${index}`), dimensions: {},
-          projection: [fact(`camera-${index}-projection`, { intrinsics: camera.intrinsics, imageWidth: camera.imageWidth, imageHeight: camera.imageHeight, convention: "opencv" })],
-          pose: [fact(`camera-${index}-pose`, { worldToCamera: camera.extrinsics, coordinateFrame: "opencv-model-world", units: "relative", scale: "ambiguous" })],
-          properties: { sourceImage: [fact(`camera-${index}-source`, sourceIds[index], [sourceIds[index], modelId])],
+        scene.cameras.push({ id: `${prefix}-camera-${index}`, label: (poseConditioned ? supplied : fact)(`camera-${index}-label`, `${poseConditioned ? "Supplied experiment" : "Inferred"} camera ${index}`), dimensions: {},
+          projection: [(poseConditioned ? supplied : fact)(`camera-${index}-projection`, { intrinsics: camera.intrinsics, imageWidth: camera.imageWidth, imageHeight: camera.imageHeight, convention: "opencv" })],
+          pose: [(poseConditioned ? supplied : fact)(`camera-${index}-pose`, { worldToCamera: camera.extrinsics, ...frame })],
+          properties: { ...(conditioning ? { cameraConditioning: [supplied(`camera-${index}-conditioning`, response.conditioning)],
+              ...(response.rawCameraPredictions?.intrinsics?.[index] ? { conditionedCameraDecoder: [fact(`camera-${index}-decoder`, { intrinsics: response.rawCameraPredictions.intrinsics[index], extrinsics: response.rawCameraPredictions.extrinsics[index], units: "relative", coordinateFrame: "opencv-model-world", independentCameraAccuracyEvidence: false })] } : {}) } : {}),
+            sourceImage: [fact(`camera-${index}-source`, sourceIds[index], [sourceIds[index], modelId])],
             ...(camera.pixelTransform ? { inputPixelTransform: [fact(`camera-${index}-pixel-transform`, { ...camera.pixelTransform, inputWidth: camera.inputWidth, inputHeight: camera.inputHeight }, [sourceIds[index], modelId])] } : {}) }
         });
       }
@@ -61,10 +74,10 @@ export function createDA3Provider({ invoke = invokeDA3, implementationFiles = [n
       for (const [index, file] of response.files.entries()) {
         await verifiedInside(request.outputDir, file);
         files.push(file);
-        scene.artifacts.push({ id: `${prefix}-geometry-${index}`, uri: file, format: path.extname(file).slice(1), sha256: await fileDigest(file), role: "visual-only", sourceIds: [...sourceIds, modelId], provider: request.identity,
-          parameters: { ...request.parameters, coordinateFrame: "opencv-model-world", units: "relative", scale: "ambiguous", evidence: "inferred" }, license: da3License });
+        scene.artifacts.push({ id: `${prefix}-geometry-${index}`, uri: file, format: path.extname(file).slice(1), sha256: await fileDigest(file), role: "visual-only", sourceIds: [...sourceIds, modelId, ...(conditioning ? [oracleId] : [])], provider: request.identity,
+          parameters: { ...request.parameters, ...frame, evidence: poseConditioned ? "camera-conditioned-depth" : "inferred", ...(conditioning ? { conditioning: response.conditioning, independentCameraReconstruction: false } : {}) }, license: da3License });
       }
-      scene.validations.push({ target: modelId, check: "relative-geometry-scale", status: "needs-review", details: "DA3 Small geometry has ambiguous scale. Independent anchor calibration is required; model confidence is not installation approval." });
+      scene.validations.push({ target: modelId, check: "geometry-scale-provenance", status: "needs-review", details: poseConditioned ? "Depth scale comes from supplied experiment cameras through upstream alignment. Returned cameras are input, not independently reconstructed. Visual-only." : "DA3 Small geometry has ambiguous scale. Intrinsics-only is a negative control, not pose conditioning. Independent anchor calibration is required." });
       assertScene(scene);
       const scenePath = path.join(request.outputDir, "scene-spec.json");
       await writeFile(scenePath, `${JSON.stringify(scene, null, 2)}\n`);

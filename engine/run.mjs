@@ -27,11 +27,13 @@ export async function runGeneration(request, { registry = createRegistry(), cach
   if (scene) assertScene(scene);
   const provider = registry.resolve({ capability, providerId, mode });
   const normalized = normalizeParameters(provider, parameters);
+  if (request.conditioning !== undefined && !provider.normalizeConditioning) throw new Error("Selected provider does not accept conditioning.");
+  const conditioning = provider.normalizeConditioning?.(request.conditioning, inputs.length);
   const sources = await Promise.all(inputs.map(async (input) => {
     if (!input.path || /^https?:|^data:/i.test(input.path)) throw new Error("Stage remote inputs locally before generation so cache keys hash actual content.");
     return { sha256: await fileDigest(input.path), extension: path.extname(input.path).toLowerCase(), mediaType: input.mediaType || "application/octet-stream", role: input.role || "source", license: input.license || { id: "UNKNOWN", commercialUse: "unknown", attribution: "" } };
   }));
-  const effective = { schemaVersion: 1, capability, provider: await providerIdentity(provider), inputs: sources, parameters: normalized, prompt, ...(scene ? { scene } : {}) };
+  const effective = { schemaVersion: 1, capability, provider: await providerIdentity(provider), inputs: sources, parameters: normalized, prompt, ...(conditioning ? { conditioning } : {}), ...(scene ? { scene } : {}) };
   const key = requestKey(effective);
   const entry = path.resolve(cacheDir, key);
   const manifestPath = path.join(entry, "manifest.json");
@@ -74,7 +76,7 @@ export async function runGeneration(request, { registry = createRegistry(), cach
     };
     await persist(manifestPath, manifest);
     try {
-      const execute = () => provider.generate({ key, identity: structuredClone(effective.provider), inputs: structuredClone(staged), parameters: structuredClone(normalized), prompt, scene: scene ? structuredClone(scene) : undefined, outputDir });
+      const execute = () => provider.generate({ key, identity: structuredClone(effective.provider), inputs: structuredClone(staged), parameters: structuredClone(normalized), prompt, ...(conditioning ? { conditioning: structuredClone(conditioning) } : {}), scene: scene ? structuredClone(scene) : undefined, outputDir });
       const generated = provider.billing === "free" ? await execute() : await withSpendPolicy(policy, execute);
       if (canonicalJSON(await providerIdentity(provider)) !== canonicalJSON(effective.provider)) throw new Error("Provider implementation/checkpoint changed during generation; result cannot be cached.");
       if (!generated || !Array.isArray(generated.files) || !generated.files.length) throw new Error("Provider returned no local artifacts.");

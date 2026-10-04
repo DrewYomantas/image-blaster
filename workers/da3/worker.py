@@ -3,6 +3,7 @@ import contextlib
 import hashlib
 import importlib.metadata
 import json
+import math
 import os
 from pathlib import Path
 import platform
@@ -17,7 +18,7 @@ MODEL_REVISION = "e08cab65ca0ec38e7826075418411ab90cab4da3"
 MODEL_ID = "depth-anything/DA3-SMALL"
 MODEL_HASH = "364492e38a3a06d221ac75da7f6621ada3f2361cd24fde11ba79091e9f40efcf"
 CONFIG_HASH = "a486e29e82b7ab4a7d4cefc1ea4526cfe2ae438a572c8ca98917cfbcde7447d2"
-ADAPTER_VERSION = "da3-small-cpu-3"
+ADAPTER_VERSION = "da3-small-cpu-4"
 CHECKPOINT_ALIASES = {
     f"head.scratch.output_conv2_aux.{level}.2.{parameter}": f"head.scratch.output_conv2_aux.0.2.{parameter}"
     for level in (1, 2, 3) for parameter in ("weight", "bias")
@@ -95,8 +96,8 @@ def identity():
 
 
 def validate_request(request):
-    if not isinstance(request, dict) or set(request) - {"inputs", "outputDir", "parameters", "expectedIdentity"}:
-        raise ValueError("Only inputs, outputDir, parameters and expectedIdentity are accepted")
+    if not isinstance(request, dict) or set(request) - {"inputs", "outputDir", "parameters", "expectedIdentity", "conditioning"}:
+        raise ValueError("Only inputs, outputDir, parameters, expectedIdentity and explicit conditioning are accepted")
     inputs = request.get("inputs")
     if not isinstance(inputs, list) or not 1 <= len(inputs) <= 8:
         raise ValueError("inputs must contain 1 to 8 ordered local images")
@@ -127,7 +128,92 @@ def validate_request(request):
     profile = parameters.get("profileWarmInference", False)
     if type(profile) is not bool:
         raise ValueError("profileWarmInference must be a boolean")
+    validate_conditioning(request.get("conditioning"), len(paths))
     return paths, output, resolution, threads, profile
+
+
+def validate_conditioning(value, count):
+    if value is None:
+        return {"mode": "none"}
+    if not isinstance(value, dict) or value.get("mode") not in ("none", "intrinsics-only", "pose"):
+        raise ValueError("conditioning requires a bounded mode")
+    mode = value["mode"]
+    if mode == "none":
+        if set(value) != {"mode"}:
+            raise ValueError("none conditioning cannot contain camera truth")
+        return value
+    required = {"mode", "provenance", "cameraConvention", "intrinsics"}
+    if mode == "pose":
+        required.add("extrinsics")
+    if set(value) != required or value["provenance"] != "experiment-oracle":
+        raise ValueError("Conditioning must be explicitly experiment-oracle with only camera inputs")
+    if value["cameraConvention"] != "opencv-world-to-camera-scene-y-up-meters":
+        raise ValueError("Conditioning requires explicit OpenCV world-to-camera scene-y-up metre convention")
+    for name, size in (("intrinsics", 3), ("extrinsics", 4)):
+        if name not in value:
+            continue
+        matrices = value[name]
+        if not isinstance(matrices, list) or len(matrices) != count:
+            raise ValueError(f"{name} camera count must match source image count")
+        for matrix in matrices:
+            if not isinstance(matrix, list) or len(matrix) != size or any(
+                not isinstance(row, list) or len(row) != size or any(
+                    type(number) not in (int, float) or not math.isfinite(number) for number in row
+                ) for row in matrix
+            ):
+                raise ValueError(f"{name} must contain finite {size}x{size} camera matrices")
+            if name == "intrinsics":
+                if matrix[0][0] <= 0 or matrix[1][1] <= 0 or matrix[2] != [0, 0, 1] or matrix[1][0] != 0 or matrix[0][1] != 0:
+                    raise ValueError("Malformed intrinsic matrix")
+            else:
+                if matrix[3] != [0, 0, 0, 1]:
+                    raise ValueError("Malformed extrinsic homogeneous row")
+                rotation = [row[:3] for row in matrix[:3]]
+                if any(abs(sum(rotation[i][k] * rotation[j][k] for k in range(3)) - (i == j)) > 1e-5
+                       for i in range(3) for j in range(3)):
+                    raise ValueError("Extrinsic rotation must be orthogonal")
+                a, b, c = rotation
+                determinant = a[0] * (b[1]*c[2]-b[2]*c[1]) - a[1] * (b[0]*c[2]-b[2]*c[0]) + a[2] * (b[0]*c[1]-b[1]*c[0])
+                if abs(determinant - 1) > 1e-5:
+                    raise ValueError("Extrinsic rotation must be proper, never reflected")
+    if mode == "pose":
+        if count < 3:
+            raise ValueError("Pose scale alignment requires at least three source cameras")
+        centres = [[-sum(e[row][axis] * e[row][3] for row in range(3)) for axis in range(3)] for e in value["extrinsics"]]
+        differences = [[number - centres[0][axis] for axis, number in enumerate(centre)] for centre in centres[1:]]
+        if not any(math.hypot(a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]) > 1e-8
+                   for a in differences for b in differences):
+            raise ValueError("Pose camera centres must be noncollinear for scale alignment")
+    return value
+
+
+def normalize_extrinsics(extrinsics):
+    import torch
+    from depth_anything_3.utils.geometry import affine_inverse
+
+    if extrinsics is None:
+        return None, None
+    normalized = extrinsics @ affine_inverse(extrinsics[:, :1])
+    distances = affine_inverse(normalized)[..., :3, 3].norm(dim=-1)
+    median_distance = torch.clamp(torch.median(distances), min=1e-1)
+    normalized[..., :3, 3] = normalized[..., :3, 3] / median_distance
+    return normalized, float(median_distance)
+
+
+def align_conditioned_prediction(prediction, extrinsics, intrinsics):
+    import numpy as np
+    from depth_anything_3.utils.pose_align import align_poses_umeyama
+
+    _, _, scale, _ = align_poses_umeyama(
+        prediction.extrinsics, extrinsics.numpy(), ransac=len(extrinsics) >= 10,
+        return_aligned=True, random_state=42,
+    )
+    if not np.isfinite(scale) or scale <= 0:
+        raise ValueError("Supplied-camera scale alignment is degenerate")
+    prediction.intrinsics = intrinsics.numpy()
+    prediction.extrinsics = extrinsics[..., :3, :].numpy()
+    prediction.depth /= scale
+    return float(scale)
 
 
 def peak_memory_bytes():
@@ -174,7 +260,7 @@ def load_checkpoint(model, state, metadata):
     return model.load_state_dict(state, strict=True)
 
 
-def predict(paths, resolution, threads, profile):
+def predict(paths, resolution, threads, profile, conditioning=None):
     source, model_dir = locations()
     sys.path.insert(0, str(source / "src"))
     import numpy as np
@@ -206,15 +292,21 @@ def predict(paths, resolution, threads, profile):
     if len(set(original_sizes)) != 1:
         raise ValueError("This adapter requires identical image dimensions to avoid implicit cropping")
     started = time.perf_counter()
-    images, _, _ = InputProcessor()(
-        [str(path) for path in paths], process_res=resolution,
+    conditioning = validate_conditioning(conditioning, len(paths))
+    mode = conditioning["mode"]
+    source_intrinsics = np.asarray(conditioning["intrinsics"], dtype=np.float32) if mode != "none" else None
+    source_extrinsics = np.asarray(conditioning["extrinsics"], dtype=np.float32) if mode == "pose" else None
+    images, extrinsics, intrinsics = InputProcessor()(
+        [str(path) for path in paths], extrinsics=source_extrinsics, intrinsics=source_intrinsics, process_res=resolution,
         process_res_method="upper_bound_resize", num_workers=1, sequential=True,
         print_progress=False,
     )
+    normalized_extrinsics, normalization_distance = normalize_extrinsics(extrinsics[None].float() if extrinsics is not None else None)
+    model_intrinsics = intrinsics[None].float() if intrinsics is not None else None
     preprocess_seconds = time.perf_counter() - started
     started = time.perf_counter()
     with torch.inference_mode(), torch.autocast(device_type="cpu", enabled=False):
-        raw = model(images[None].float(), infer_gs=False, use_ray_pose=False, ref_view_strategy="saddle_balanced")
+        raw = model(images[None].float(), extrinsics=normalized_extrinsics, intrinsics=model_intrinsics, infer_gs=False, use_ray_pose=False, ref_view_strategy="saddle_balanced")
         prediction = OutputProcessor()(raw)
     inference_seconds = time.perf_counter() - started
     telemetry = {"loadSeconds": load_seconds, "preprocessSeconds": preprocess_seconds,
@@ -222,11 +314,36 @@ def predict(paths, resolution, threads, profile):
     if profile:
         started = time.perf_counter()
         with torch.inference_mode(), torch.autocast(device_type="cpu", enabled=False):
-            warm_raw = model(images[None].float(), infer_gs=False, use_ray_pose=False, ref_view_strategy="saddle_balanced")
+            warm_raw = model(images[None].float(), extrinsics=normalized_extrinsics, intrinsics=model_intrinsics, infer_gs=False, use_ray_pose=False, ref_view_strategy="saddle_balanced")
             warm_prediction = OutputProcessor()(warm_raw)
         telemetry.update({"warmInferenceSeconds": time.perf_counter() - started,
                           "inferenceForwardCalls": 2,
                           "warmMaxDepthDifference": float(np.max(np.abs(prediction.depth - warm_prediction.depth)))})
+    prediction.raw_model_depths = prediction.depth.copy()
+    prediction.raw_model_intrinsics = prediction.intrinsics.copy()
+    prediction.raw_model_extrinsics = prediction.extrinsics.copy()
+    started = time.perf_counter()
+    scale = align_conditioned_prediction(prediction, extrinsics, intrinsics) if mode == "pose" else None
+    telemetry["alignmentSeconds"] = time.perf_counter() - started
+    prediction.conditioning = {
+        "mode": mode, "provenance": conditioning.get("provenance"),
+        "cameraConvention": conditioning.get("cameraConvention"),
+        "workerRequestCameraSha256": hashlib.sha256(json.dumps(conditioning, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()).hexdigest(),
+        "cameraHashEncoding": "python-sorted-compact-json-not-conditioning-file-bytes",
+        "sourceIntrinsics": source_intrinsics.tolist() if source_intrinsics is not None else None,
+        "processedIntrinsics": intrinsics.tolist() if intrinsics is not None else None,
+        "sourceExtrinsics": source_extrinsics.tolist() if source_extrinsics is not None else None,
+        "normalizedExtrinsics": normalized_extrinsics[0].tolist() if normalized_extrinsics is not None else None,
+        "normalizationMedianDistanceMeters": normalization_distance,
+        "backbonePoseConditioning": mode == "pose",
+        "referenceViewBehavior": "source-0-no-reorder" if mode == "pose" else "saddle-balanced-restored-original-order",
+        "cameraPredictionIndependent": mode == "none",
+        "outputCameraSource": "experiment-oracle-supplied" if mode == "pose" else "model-decoder",
+        "depthScaleSource": "supplied-camera-path" if mode == "pose" else "none",
+        "poseAlignmentScale": scale, "depthScaleMultiplier": 1 / scale if scale is not None else None,
+        "intrinsicsResizeConvention": "upstream-row-scaling-no-half-pixel-offset",
+        "depthSemantics": "model-inference-conditioned-on-experiment-oracle-cameras" if mode == "pose" else "model-inference",
+    }
     processed = images.permute(0, 2, 3, 1).numpy()
     processed = np.clip(processed * np.array([0.229, 0.224, 0.225]) + np.array([0.485, 0.456, 0.406]), 0, 1)
     prediction.processed_images = (processed * 255).astype(np.uint8)
@@ -260,6 +377,13 @@ def write_prediction(prediction, original_sizes, paths, output, reviewed_identit
     if not (depths > 0).all():
         raise ValueError("Depth must be positive camera-z")
     arrays["extrinsics"] = arrays["extrinsics"][:, :3, :4]
+    for name in ("raw_model_depths", "raw_model_intrinsics", "raw_model_extrinsics"):
+        value = np.asarray(getattr(prediction, name), dtype=np.float32)
+        if not np.isfinite(value).all():
+            raise ValueError(f"Nonfinite raw prediction: {name}")
+        arrays[name] = value
+    arrays["conditioning_mode"] = np.asarray(prediction.conditioning["mode"])
+    arrays["depth_scale_source"] = np.asarray(prediction.conditioning["depthScaleSource"])
     intrinsics = arrays["intrinsics"]
     rotations = arrays["extrinsics"][:, :3, :3]
     if not ((intrinsics[:, 0, 0] > 0).all() and (intrinsics[:, 1, 1] > 0).all()):
@@ -289,9 +413,15 @@ def write_prediction(prediction, original_sizes, paths, output, reviewed_identit
               "coordinates": {"cameraConvention": "opencv", "extrinsics": "world-to-camera",
                               "axes": "x-right,y-down,z-forward", "depth": "camera-z", "units": "relative",
                               "confidence": "raw-uncalibrated-higher-is-better"},
+              "conditioning": prediction.conditioning,
+              "rawCameraPredictions": {"independent": prediction.conditioning["cameraPredictionIndependent"],
+                                       "intrinsics": arrays["raw_model_intrinsics"].tolist(),
+                                       "extrinsics": arrays["raw_model_extrinsics"].tolist()},
               "inputs": [{"sourceIndex": index, "sha256": sha256(path)} for index, path in enumerate(paths)],
               "cameras": cameras, "geometryArtifact": str(geometry),
               "artifactSha256": sha256(geometry), "telemetry": telemetry}
+    if prediction.conditioning["mode"] == "pose":
+        result["coordinates"].update({"units": "meters", "worldFrame": "scene-y-up", "scaleSource": "supplied-camera-path"})
     result["telemetry"]["peakMemoryBytes"] = peak_memory_bytes()
     summary = output / "worker-result.json"
     result["files"] = [str(geometry), str(summary)]
@@ -306,7 +436,7 @@ def run(request):
     if request.get("expectedIdentity", reviewed_identity) != reviewed_identity:
         raise ValueError("Runtime identity changed since parent request preparation")
     input_hashes = [sha256(path) for path in paths]
-    prediction, original_sizes, telemetry = predict(paths, resolution, threads, profile)
+    prediction, original_sizes, telemetry = predict(paths, resolution, threads, profile, request.get("conditioning"))
     if input_hashes != [sha256(path) for path in paths] or identity() != reviewed_identity:
         raise ValueError("Input or runtime changed during inference")
     telemetry["totalSeconds"] = time.perf_counter() - started
