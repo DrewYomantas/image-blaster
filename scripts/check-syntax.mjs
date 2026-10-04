@@ -14,5 +14,5 @@ async function inspect(directory) {
     }
   }
 }
-for (const directory of ["engine", "tests", ".claude/scripts", "scripts"]) await inspect(directory);
+for (const directory of ["engine", "tests", ".claude/scripts", "scripts", "benchmarks/geometry"]) await inspect(directory);
 console.log(`Syntax checked ${checked} JavaScript modules.`);

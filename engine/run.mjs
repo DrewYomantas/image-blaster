@@ -1,9 +1,10 @@
 import { copyFile, mkdir, readdir, rename, rmdir, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { fileDigest, inside, readCached, requestKey, verifiedInside } from "./cache.mjs";
+import { canonicalJSON, fileDigest, inside, readCached, requestKey, verifiedInside } from "./cache.mjs";
 import { createRegistry, normalizeParameters } from "./providers.mjs";
 import { assertEvidencePreserved, assertScene } from "./scene.mjs";
 import { assertSpendPolicy, withSpendPolicy } from "./spend.mjs";
+import { providerIdentity } from "./identity.mjs";
 
 function rejectSecrets(value) {
   if (!value || typeof value !== "object") return;
@@ -30,7 +31,7 @@ export async function runGeneration(request, { registry = createRegistry(), cach
     if (!input.path || /^https?:|^data:/i.test(input.path)) throw new Error("Stage remote inputs locally before generation so cache keys hash actual content.");
     return { sha256: await fileDigest(input.path), extension: path.extname(input.path).toLowerCase(), mediaType: input.mediaType || "application/octet-stream", role: input.role || "source", license: input.license || { id: "UNKNOWN", commercialUse: "unknown", attribution: "" } };
   }));
-  const effective = { schemaVersion: 1, capability, provider: { id: provider.id, model: provider.model, version: provider.version }, inputs: sources, parameters: normalized, prompt, ...(scene ? { scene } : {}) };
+  const effective = { schemaVersion: 1, capability, provider: await providerIdentity(provider), inputs: sources, parameters: normalized, prompt, ...(scene ? { scene } : {}) };
   const key = requestKey(effective);
   const entry = path.resolve(cacheDir, key);
   const manifestPath = path.join(entry, "manifest.json");
@@ -73,15 +74,16 @@ export async function runGeneration(request, { registry = createRegistry(), cach
     };
     await persist(manifestPath, manifest);
     try {
-      const execute = () => provider.generate({ key, inputs: structuredClone(staged), parameters: structuredClone(normalized), prompt, scene: scene ? structuredClone(scene) : undefined, outputDir });
+      const execute = () => provider.generate({ key, identity: structuredClone(effective.provider), inputs: structuredClone(staged), parameters: structuredClone(normalized), prompt, scene: scene ? structuredClone(scene) : undefined, outputDir });
       const generated = provider.billing === "free" ? await execute() : await withSpendPolicy(policy, execute);
+      if (canonicalJSON(await providerIdentity(provider)) !== canonicalJSON(effective.provider)) throw new Error("Provider implementation/checkpoint changed during generation; result cannot be cached.");
       if (!generated || !Array.isArray(generated.files) || !generated.files.length) throw new Error("Provider returned no local artifacts.");
       rejectSecrets(generated.result);
       for (const input of staged) if (await fileDigest(input.path) !== input.sha256) throw new Error("Provider changed staged source evidence.");
       for (const file of generated.files) {
         manifest.artifacts.push({ path: await verifiedInside(entry, file), sha256: await fileDigest(file), bytes: (await stat(file)).size });
       }
-      if (capability === "scene-analysis") { assertScene(generated.result); assertEvidencePreserved(scene, generated.result); }
+      if (["scene-analysis", "scene-geometry"].includes(capability)) { assertScene(generated.result); assertEvidencePreserved(scene, generated.result); }
       manifest.result = generated.result;
       manifest.resultHash = requestKey(generated.result);
       manifest.status = "complete";

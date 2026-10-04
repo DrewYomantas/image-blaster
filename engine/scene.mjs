@@ -67,6 +67,20 @@ export function assertScene(scene) {
     }
     for (const evidence of Object.values(entity.properties || {})) { evidence.forEach(checkFact); resolveFact(evidence); }
     if (entity.transform) { entity.transform.forEach(checkFact); resolveFact(entity.transform); }
+    for (const key of ["projection", "pose"]) if (entity[key]) {
+      if (!scene.cameras.includes(entity)) throw new Error("Camera evidence belongs on cameras only.");
+      entity[key].forEach(checkFact); resolveFact(entity[key]);
+    }
+    for (const projection of entity.projection || []) {
+      const k = projection.value.intrinsics;
+      if (k[0][0] <= 0 || k[1][1] <= 0 || canonicalJSON(k[2]) !== "[0,0,1]") throw new Error("Camera intrinsics require positive focal lengths and a homogeneous last row.");
+    }
+    for (const pose of entity.pose || []) {
+      const r = pose.value.worldToCamera.map((row) => row.slice(0, 3));
+      const dot = (a, b) => a.reduce((sum, value, i) => sum + value * b[i], 0);
+      const determinant = r[0][0] * (r[1][1] * r[2][2] - r[1][2] * r[2][1]) - r[0][1] * (r[1][0] * r[2][2] - r[1][2] * r[2][0]) + r[0][2] * (r[1][0] * r[2][1] - r[1][1] * r[2][0]);
+      if (r.some((row, i) => r.some((other, j) => Math.abs(dot(row, other) - Number(i === j)) > 0.002)) || Math.abs(determinant - 1) > 0.002) throw new Error("Camera extrinsics require a proper orthonormal rotation.");
+    }
     for (const id of entity.materialIds || []) if (!materials.has(id)) throw new Error(`Unknown material: ${id}`);
     if (entity.geometry) {
       refs(entity.geometry.sourceIds);
@@ -110,7 +124,7 @@ export function assertEvidencePreserved(original, generated) {
         for (const key of ["dimensions", "properties"]) {
           for (const [slot, evidence] of Object.entries(entity[key] || {})) if (!retained(evidence, after[key]?.[slot] || [])) throw new Error("Provider must preserve fact ownership and dimension axes.");
         }
-        if (!retained(entity.transform || [], after.transform || [])) throw new Error("Provider must preserve transform evidence.");
+        for (const key of ["transform", "projection", "pose"]) if (!retained(entity[key] || [], after[key] || [])) throw new Error("Provider must preserve transform and camera evidence.");
         for (const key of ["materialIds", "artifactIds"]) if (!(entity[key] || []).every((id) => (after[key] || []).includes(id))) throw new Error("Provider must preserve material and artifact bindings.");
         if (entity.geometry?.role === "authoritative" && canonicalJSON(entity.geometry) !== canonicalJSON(after.geometry)) throw new Error("Provider cannot replace authoritative geometry.");
       }

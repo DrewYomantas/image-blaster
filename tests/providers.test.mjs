@@ -21,9 +21,10 @@ async function setup(t) {
   return { root, image, cacheDir: path.join(root, "cache") };
 }
 
-test("registry includes seven capability boundaries, retained hosted providers and local procedures", () => {
+test("registry includes separate semantic and geometric boundaries, retained hosted providers and local procedures", () => {
   const registry = createRegistry();
-  assert.equal(registry.list().length, 8);
+  assert.equal(registry.list().length, 9);
+  assert.equal(registry.resolve({ capability: "scene-geometry" }).id, "da3-small");
   assert.equal(registry.resolve({ capability: "scene-analysis", mode: "auto" }).id, "local-evidence");
   assert.equal(registry.resolve({ capability: "object-3d", mode: "auto" }).id, "procedural-box");
   assert.throws(() => registry.resolve({ capability: "world-reconstruction", mode: "auto" }), /never falls back/);
@@ -152,7 +153,7 @@ test("real retained Hunyuan, Meshy, image edit and World Labs modules run throug
 test("free self-hosted registry provider can execute without cloud spend approval", async (t) => {
   const f = await setup(t);
   const registry = new ProviderRegistry();
-  registry.register({ id: "owned-worker", model: "fixture", version: "1", capability: "object-3d", mode: "self-hosted", billing: "free", defaults: {}, extra: [], license: {}, async generate(request) { const file = path.join(request.outputDir, "fixture.obj"); await writeFile(file, "fixture"); return { result: { fixture: true }, files: [file] }; } });
+  registry.register({ id: "owned-worker", implementationFiles: [new URL(import.meta.url)], model: "fixture", version: "1", capability: "object-3d", mode: "self-hosted", billing: "free", defaults: {}, extra: [], license: {}, async generate(request) { const file = path.join(request.outputDir, "fixture.obj"); await writeFile(file, "fixture"); return { result: { fixture: true }, files: [file] }; } });
   assert.equal((await runGeneration({ capability: "object-3d", mode: "self-hosted" }, { ...f, registry })).cached, false);
 });
 

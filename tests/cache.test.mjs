@@ -8,6 +8,7 @@ import { runGeneration } from "../engine/run.mjs";
 import { createRegistry } from "../engine/providers.mjs";
 import { sceneFixture } from "./fixtures.mjs";
 import { normalizeParameters } from "../engine/providers.mjs";
+import { implementationFingerprint, providerIdentity } from "../engine/identity.mjs";
 
 async function fixture(t) {
   const root = await mkdtemp(path.join(os.tmpdir(), "image-blaster-cache-"));
@@ -124,7 +125,7 @@ test("preplanted junction cannot redirect provider writes outside cache", async 
   const f = await fixture(t);
   const registry = createRegistry();
   const provider = registry.resolve({ capability: "scene-analysis" });
-  const effective = { schemaVersion: 1, capability: "scene-analysis", provider: { id: provider.id, model: provider.model, version: provider.version }, inputs: [], parameters: normalizeParameters(provider), prompt: "" };
+  const effective = { schemaVersion: 1, capability: "scene-analysis", provider: await providerIdentity(provider), inputs: [], parameters: normalizeParameters(provider), prompt: "" };
   const entry = path.join(f.cacheDir, requestKey(effective));
   const outside = path.join(f.root, "outside");
   await mkdir(entry, { recursive: true });
@@ -132,4 +133,76 @@ test("preplanted junction cannot redirect provider writes outside cache", async 
   await symlink(outside, path.join(entry, "artifacts"), "junction");
   await assert.rejects(runGeneration({ capability: "scene-analysis" }, { ...f, registry }), /Nonempty cache entry/);
   assert.deepEqual(await (await import("node:fs/promises")).readdir(outside), []);
+});
+
+test("checkpoint and material implementation changes miss while execution metadata and identical identity hit", async (t) => {
+  const f = await fixture(t);
+  const implementation = path.join(f.root, "adapter.mjs");
+  const helper = path.join(f.root, "helper.mjs");
+  await writeFile(implementation, 'import { output } from "./helper.mjs"; export const adapter = output;');
+  await writeFile(helper, 'export const output = "first";');
+  const registry = createRegistry();
+  const provider = registry.resolve({ capability: "scene-analysis" });
+  provider.implementationFiles = [implementation];
+  provider.checkpointRevision = "immutable-checkpoint-a";
+  let calls = 0;
+  const generate = provider.generate;
+  provider.generate = async (request) => { calls++; return generate(request); };
+  const request = { capability: "scene-analysis" };
+  const first = await runGeneration(request, { ...f, registry });
+  const hit = await runGeneration({ ...request, executionMetadata: { host: "other", startedAt: "tomorrow" } }, { ...f, registry });
+  assert.equal(hit.key, first.key);
+  assert.equal(hit.cached, true);
+  assert.equal(calls, 1);
+  provider.checkpointRevision = "immutable-checkpoint-b";
+  const checkpoint = await runGeneration(request, { ...f, registry });
+  assert.notEqual(checkpoint.key, first.key);
+  assert.equal(checkpoint.cached, false);
+  await writeFile(helper, 'export const output = "changed helper";');
+  const code = await runGeneration(request, { ...f, registry });
+  assert.notEqual(code.key, checkpoint.key);
+  assert.equal(code.cached, false);
+  await writeFile(implementation, 'import { output } from "./helper.mjs"; export const adapter = [output];');
+  assert.notEqual((await runGeneration(request, { ...f, registry })).key, code.key);
+  assert.equal(calls, 4);
+});
+
+test("bounded implementation fingerprint tracks configuration and ignores unrelated files and relocation", async (t) => {
+  const f = await fixture(t);
+  const file = path.join(f.root, "worker.py");
+  await writeFile(file, "print('geometry')");
+  const first = await implementationFingerprint([file], { cpuPrecision: "float32" });
+  await writeFile(path.join(f.root, "README.md"), "irrelevant doc edit");
+  const relocated = path.join(f.root, "renamed.py");
+  await writeFile(relocated, await readFile(file));
+  assert.equal(await implementationFingerprint([relocated], { cpuPrecision: "float32" }), first);
+  assert.notEqual(await implementationFingerprint([file], { cpuPrecision: "float16" }), first);
+});
+
+test("implementation identity retains helper bindings when module contents are exchanged", async (t) => {
+  const f = await fixture(t);
+  const adapter = path.join(f.root, "adapter.mjs");
+  const a = path.join(f.root, "a.mjs");
+  const b = path.join(f.root, "b.mjs");
+  await writeFile(adapter, 'import { x } from "./a.mjs"; import "./b.mjs"; export const result = x;');
+  await writeFile(a, "export const x = 1;");
+  await writeFile(b, "export const x = 2;");
+  const before = await implementationFingerprint([adapter]);
+  await writeFile(a, "export const x = 2;");
+  await writeFile(b, "export const x = 1;");
+  assert.notEqual(await implementationFingerprint([adapter]), before);
+});
+
+test("implementation mutation during generation cannot publish a complete cache receipt", async (t) => {
+  const f = await fixture(t);
+  const file = path.join(f.root, "adapter.mjs");
+  await writeFile(file, "export const revision = 1;");
+  const registry = createRegistry();
+  const provider = registry.resolve({ capability: "scene-analysis" });
+  provider.implementationFiles = [file];
+  const generate = provider.generate;
+  provider.generate = async (request) => { const result = await generate(request); await writeFile(file, "export const revision = 2;"); return result; };
+  await assert.rejects(runGeneration({ capability: "scene-analysis" }, { ...f, registry }), /changed during generation/);
+  const [key] = await (await import("node:fs/promises")).readdir(f.cacheDir);
+  assert.equal(JSON.parse(await readFile(path.join(f.cacheDir, key, "manifest.json"))).status, "failed");
 });

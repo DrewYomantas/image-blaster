@@ -2,8 +2,9 @@ import { writeFile } from "node:fs/promises";
 import path from "node:path";
 import { assertScene, emptyScene } from "./scene.mjs";
 import { fileDigest } from "./cache.mjs";
+import { createDA3Provider } from "./da3.mjs";
 
-export const capabilities = ["scene-analysis", "image-edit", "object-3d", "world-reconstruction", "material", "audio", "decision"];
+export const capabilities = ["scene-analysis", "scene-geometry", "image-edit", "object-3d", "world-reconstruction", "material", "audio", "decision"];
 export const unknownLicense = { id: "UNKNOWN", commercialUse: "unknown", attribution: "" };
 
 export class ProviderRegistry {
@@ -11,7 +12,7 @@ export class ProviderRegistry {
 
   register(provider) {
     if (!provider.id || !capabilities.includes(provider.capability) || !["local", "self-hosted", "paid-api"].includes(provider.mode) ||
-        !["free", "metered"].includes(provider.billing) || !provider.model || !provider.version || typeof provider.generate !== "function" || this.#providers.has(provider.id)) {
+        !["free", "metered"].includes(provider.billing) || !provider.model || !provider.version || !provider.implementationFiles?.length || typeof provider.generate !== "function" || this.#providers.has(provider.id)) {
       throw new Error("Invalid or duplicate provider registration.");
     }
     this.#providers.set(provider.id, provider);
@@ -19,7 +20,7 @@ export class ProviderRegistry {
   }
 
   list() {
-    return [...this.#providers.values()].map(({ generate, runLegacy, ...description }) => description);
+    return [...this.#providers.values()].map(({ generate, runLegacy, identity, implementationFiles, ...description }) => description);
   }
 
   resolve({ capability, providerId, mode = "local" }) {
@@ -63,8 +64,9 @@ export function normalizeParameters(provider, parameters = {}) {
 
 export function createRegistry(runtimes = {}) {
   const registry = new ProviderRegistry();
+  registry.register(createDA3Provider());
   registry.register({
-    id: "local-evidence", capability: "scene-analysis", mode: "local", billing: "free", model: "evidence-envelope", version: "1", defaults: { sceneId: "scene" }, extra: [], license: { id: "MIT", commercialUse: "allowed", attribution: "Image Blaster contributors" },
+    id: "local-evidence", capability: "scene-analysis", mode: "local", billing: "free", model: "evidence-envelope", version: "1", implementationFiles: [new URL(import.meta.url)], defaults: { sceneId: "scene" }, extra: [], license: { id: "MIT", commercialUse: "allowed", attribution: "Image Blaster contributors" },
     async generate(request) {
       const scene = request.scene ? structuredClone(assertScene(request.scene)) : emptyScene(request.parameters.sceneId || "scene");
       for (const [index, input] of request.inputs.entries()) {
@@ -78,7 +80,7 @@ export function createRegistry(runtimes = {}) {
     }
   });
   registry.register({
-    id: "procedural-box", capability: "object-3d", mode: "local", billing: "free", model: "deterministic-box", version: "1", defaults: { width: 1, height: 1, depth: 1 }, extra: [], license: { id: "MIT", commercialUse: "allowed", attribution: "Image Blaster contributors" },
+    id: "procedural-box", capability: "object-3d", mode: "local", billing: "free", model: "deterministic-box", version: "1", implementationFiles: [new URL(import.meta.url)], defaults: { width: 1, height: 1, depth: 1 }, extra: [], license: { id: "MIT", commercialUse: "allowed", attribution: "Image Blaster contributors" },
     async generate(request) {
       if (request.inputs.length || request.prompt || request.scene) throw new Error("Procedural box accepts numeric dimensions only; it does not reconstruct a source image.");
       const { width: w, height: h, depth: d } = request.parameters;
@@ -95,7 +97,9 @@ export function createRegistry(runtimes = {}) {
       return run(options);
     };
     registry.register({
-      ...definition, mode: "paid-api", billing: "metered", version: "upstream-4acb43b-adapter-1", license: unknownLicense, runLegacy,
+      ...definition, mode: "paid-api", billing: "metered", version: "upstream-4acb43b-adapter-1", checkpointRevision: "vendor-immutable-revision-unknown",
+      implementationFiles: [new URL(import.meta.url), new URL(definition.module, import.meta.url)],
+      ...(runtimes[definition.id] ? { implementationConfig: { injectedRuntime: runtimes[definition.id].toString() } } : {}), license: unknownLicense, runLegacy,
       async generate(request) {
         const paths = request.inputs.map((input) => input.path);
         if (definition.input === "image" && paths.length !== 1) throw new Error("This provider requires exactly one image.");

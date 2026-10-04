@@ -17,6 +17,12 @@ app/.vite/
 .env.*
 !.env.example
 .image-blaster/
+workers/**/.venv/
+workers/**/__pycache__/
+benchmarks/**/__pycache__/
+*.safetensors
+*.pt
+*.pth
 
 # OS
 .DS_Store
